@@ -1,0 +1,11 @@
+<lift:surround with="default" at="content">
+  <h1>Choose your sport</h1>
+  <lift:Sports.list>
+    <div class="sport"><sport:name_and_link/></div>
+  </lift:Sports.list>
+  
+  <lift:Sports.add form="POST">
+    <sport:name/><sport:submit/>
+  </lift:Sports.add>
+</lift:surround>
+

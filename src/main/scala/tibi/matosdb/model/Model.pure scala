@@ -1,0 +1,40 @@
+import scala.collection.mutable.Map
+import org.neodatis.odb.ODBFactory
+
+class Sport(val name: String)
+class ProductType(val name: String, val sport: Sport, val properties: Set[Property])
+class Make(val name: String)
+class Model(val name: String, val make: Make, val prod_type: ProductType)
+class Size(val name: String, val model: Model) extends CanHaveProperties {
+  override def isAllowed(prop: Property) = model.prod_type.properties contains prop
+}
+
+case class Property(name: String)
+trait CanHaveProperties {
+  private val vals = Map[Property, String]()
+  def setProperty(prop: Property, value: String) {
+    if (isAllowed(prop))
+      vals.put(prop, value)
+  }
+  def isAllowed(prop: Property): Boolean
+}
+
+
+object Main {
+  def main(args: Array[String]) {
+    val windsurf = new Sport("windsurf")
+    val surface = new Property("surface")
+    val sails = new ProductType("sails", windsurf, Set(surface))
+    val np = new Make("Neil Pryde")
+    val v8 = new Model("V8", np, sails)
+    val ka = new Make("Ka")
+    val koncept = new Model("Koncept", ka, sails)
+    val kk58 = new Size("5.8", koncept)
+    kk58.setProperty(surface, "5.8")
+    
+    val db = ODBFactory.open("mydb")
+    db store v8
+    db store kk58
+    db close
+  }
+}
