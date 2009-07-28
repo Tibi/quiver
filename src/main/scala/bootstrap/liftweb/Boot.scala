@@ -75,7 +75,7 @@ object DBVendor extends ConnectionManager {
 
     val dm = (Props.get("db.user"), Props.get("db.password")) match {
       case (Full(user), Full(pwd)) =>
-	DriverManager.getConnection(dbUrl, user, pwd)
+        DriverManager.getConnection(dbUrl, user, pwd)
 
       case _ => DriverManager.getConnection(dbUrl)
     }
@@ -88,14 +88,14 @@ object DBVendor extends ConnectionManager {
   def newConnection(name: ConnectionIdentifier): Box[Connection] =
     synchronized {
       pool match {
-	case Nil if poolSize < maxPoolSize =>
-	  val ret = createOne
+        case Nil if poolSize < maxPoolSize =>
+          val ret = createOne
         poolSize = poolSize + 1
         ret.foreach(c => pool = c :: pool)
         ret
 
-	case Nil => wait(1000L); newConnection(name)
-	case x :: xs => try {
+        case Nil => wait(1000L); newConnection(name)
+        case x :: xs => try {
           x.setAutoCommit(false)
           Full(x)
         } catch {
