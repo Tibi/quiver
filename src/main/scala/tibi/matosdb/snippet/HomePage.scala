@@ -45,7 +45,7 @@ class ProductTypes {
   def header(xhtml: NodeSeq): NodeSeq = bind("sport", xhtml,
     "name" -> Text(forSport.name))
 
-  def list(xhtml: NodeSeq): NodeSeq = ProductType.findAll(By(ProductType.sport, forSport)).flatMap(
+  def list(xhtml: NodeSeq): NodeSeq = forSport.productTypes.flatMap(
     productType => bind("product_type", xhtml, "name" -> productType.name.is,
                   "name_and_link" -> SHtml.link("/brands.html",
                                                 () => currentProductType(Full(productType)),

@@ -5,6 +5,7 @@ import _root_.net.liftweb.mapper._
 class Sport extends LongKeyedMapper[Sport] with IdPK { 
   def getSingleton = Sport
   object name extends MappedString(this, 100)
+  def productTypes = ProductType.findAll(By(ProductType.sport, this))
 }
 
 object Sport extends Sport with LongKeyedMetaMapper[Sport] {
