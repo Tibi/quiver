@@ -16,7 +16,7 @@ import tibi.matosdb.model._
 
 object currentSport extends SessionVar[Box[Sport]](Empty)
 object currentProductType extends SessionVar[Box[ProductType]](Empty)
-object currentMake extends SessionVar[Box[Make]](Empty)
+object currentBrand extends SessionVar[Box[Brand]](Empty)
 
 class Sports {
   
@@ -39,7 +39,7 @@ class ProductTypes {
   
   val forSport = currentSport.is match {
     case Full(sport) => sport
-    case Empty => throw new RuntimeException("called without a sport")
+    case _ => throw new RuntimeException("called without a sport")
   }
 
   def header(xhtml: NodeSeq): NodeSeq = bind("sport", xhtml,
@@ -47,7 +47,7 @@ class ProductTypes {
 
   def list(xhtml: NodeSeq): NodeSeq = ProductType.findAll(By(ProductType.sport, forSport)).flatMap(
     productType => bind("product_type", xhtml, "name" -> productType.name.is,
-                  "name_and_link" -> SHtml.link("/makes.html",
+                  "name_and_link" -> SHtml.link("/brands.html",
                                                 () => currentProductType(Full(productType)),
                                                 Text(productType.name.is))))
 
@@ -60,23 +60,22 @@ class ProductTypes {
 }
 
 
-class Makes {
+class Brands {
   def header(xhtml: NodeSeq): NodeSeq = bind("product_type", xhtml,
     "name" -> (currentProductType.is match {
       case Full(productType) => Text(productType.name)
-      case Empty => Text("no product type")
-  //  case Failure => Text("errrrrorrr")
+      case _ => Text("no product type")
   }))
-  def list(xhtml: NodeSeq): NodeSeq = Make.findAll.flatMap(
-    make => bind("make", xhtml, "name" -> make.name.is,
+  def list(xhtml: NodeSeq): NodeSeq = Brand.findAll.flatMap(
+    brand => bind("brand", xhtml, "name" -> brand.name.is,
                   "name_and_link" -> SHtml.link("/models.html",
-                                                () => currentMake(Full(make)),
-                                                Text(make.name.is))))
+                                                () => currentBrand(Full(brand)),
+                                                Text(brand.name.is))))
 
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = Make.create.name(name).save
-    bind("make", xhtml, "name" -> SHtml.text(name, name = _),
+    def processAdd(): Any = Brand.create.name(name).save
+    bind("brand", xhtml, "name" -> SHtml.text(name, name = _),
       "submit" -> SHtml.submit("Add", processAdd))
   }
 }

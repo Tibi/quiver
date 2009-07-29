@@ -1,0 +1,14 @@
+<lift:surround with="default" at="content">
+  <lift:Brands.header>
+    <h1>Brands providing <product_type:name/></h1>
+  </lift:Brands.header>
+  
+  <lift:Brands.list>
+    <div class="brand"><brand:name_and_link/></div>
+  </lift:Brands.list>
+  
+  <lift:Brands.add form="POST">
+    <brand:name/><brand:submit/>
+  </lift:Brands.add>
+</lift:surround>
+

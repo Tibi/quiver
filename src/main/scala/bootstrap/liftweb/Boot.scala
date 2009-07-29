@@ -16,16 +16,15 @@ import _root_.javax.servlet.http.{HttpServletRequest}
   */
 class Boot {
   def boot {
-    if (!DB.jndiJdbcConnAvailable_?)
-      DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
+    DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
 
     // where to search snippet
     LiftRules.addToPackages("tibi.matosdb")
-    Schemifier.schemify(true, Log.infoF _, User, Sport, ProductType, Make, Model)
+    Schemifier.schemify(true, Log.infoF _, User, Sport, ProductType, Brand, Model)
 
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) ::
-                  Menu(Loc("Makes", List("makes"), "Makes")) ::
+                  Menu(Loc("Brands", List("brands"), "Brands")) ::
                   Menu(Loc("Product Types", List("product_types"), "Product Types")) ::
                   User.sitemap
     LiftRules.setSiteMap(SiteMap(entries:_*))
@@ -60,61 +59,16 @@ class Boot {
 * Database connection calculation
 */
 object DBVendor extends ConnectionManager {
-  private var pool: List[Connection] = Nil
-  private var poolSize = 0
-  private val maxPoolSize = 4
 
-  private def createOne: Box[Connection] = try {
-    val driverName: String = Props.get("db.driver") openOr
-    "org.apache.derby.jdbc.EmbeddedDriver"
+  Class.forName("org.h2.Driver")
 
-    val dbUrl: String = Props.get("db.url") openOr
-    "jdbc:derby:lift_example;create=true"
-
-    Class.forName(driverName)
-
-    val dm = (Props.get("db.user"), Props.get("db.password")) match {
-      case (Full(user), Full(pwd)) =>
-        DriverManager.getConnection(dbUrl, user, pwd)
-
-      case _ => DriverManager.getConnection(dbUrl)
-    }
-
-    Full(dm)
+  def newConnection(name: ConnectionIdentifier): Box[Connection] = try {
+    Full(DriverManager.getConnection("jdbc:h2:db/matosdb"))
   } catch {
     case e: Exception => e.printStackTrace; Empty
   }
-
-  def newConnection(name: ConnectionIdentifier): Box[Connection] =
-    synchronized {
-      pool match {
-        case Nil if poolSize < maxPoolSize =>
-          val ret = createOne
-        poolSize = poolSize + 1
-        ret.foreach(c => pool = c :: pool)
-        ret
-
-        case Nil => wait(1000L); newConnection(name)
-        case x :: xs => try {
-          x.setAutoCommit(false)
-          Full(x)
-        } catch {
-          case e => try {
-            pool = xs
-            poolSize = poolSize - 1
-            x.close
-            newConnection(name)
-          } catch {
-            case e => newConnection(name)
-          }
-        }
-      }
-    }
-
-  def releaseConnection(conn: Connection): Unit = synchronized {
-    pool = conn :: pool
-    notify
+  
+  def releaseConnection(conn: Connection) {
+    conn.close
   }
 }
-
-

@@ -27,12 +27,12 @@ object ProductType extends ProductType with LongKeyedMetaMapper[ProductType] {
 }
 
 
-class Make extends LongKeyedMapper[Make] with IdPK { 
-  def getSingleton = Make
+class Brand extends LongKeyedMapper[Brand] with IdPK { 
+  def getSingleton = Brand
   object name extends MappedString(this, 100)
 }
 
-object Make extends Make with LongKeyedMetaMapper[Make] {
+object Brand extends Brand with LongKeyedMetaMapper[Brand] {
   override def fieldOrder = List(name)
 }
 
@@ -40,7 +40,7 @@ object Make extends Make with LongKeyedMetaMapper[Make] {
 class Model extends LongKeyedMapper[Model] with IdPK { 
   def getSingleton = Model
   object name extends MappedString(this, 100)
-  object make extends MappedLongForeignKey(this, Make) {
+  object brand extends MappedLongForeignKey(this, Brand) {
     override def dbIndexed_? = true
   }
   object product_type extends MappedLongForeignKey(this, ProductType) {
@@ -49,7 +49,7 @@ class Model extends LongKeyedMapper[Model] with IdPK {
 }
 
 object Model extends Model with LongKeyedMetaMapper[Model] {
-  override def fieldOrder = List(name, make, product_type)
+  override def fieldOrder = List(name, brand, product_type)
 }
 
 
