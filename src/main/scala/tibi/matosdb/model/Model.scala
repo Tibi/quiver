@@ -32,7 +32,7 @@ class Brand extends LongKeyedMapper[Brand] with IdPK {
   object name extends MappedString(this, 100)
 }
 
-object Brand extends Brand with LongKeyedMetaMapper[Brand] {
+object Brand extends Brand with LongKeyedMetaMapper[Brand] with CRUDify[Long, Brand] {
   override def fieldOrder = List(name)
 }
 
@@ -43,13 +43,13 @@ class Model extends LongKeyedMapper[Model] with IdPK {
   object brand extends MappedLongForeignKey(this, Brand) {
     override def dbIndexed_? = true
   }
-  object product_type extends MappedLongForeignKey(this, ProductType) {
+  object productType extends MappedLongForeignKey(this, ProductType) {
     override def dbIndexed_? = true
   }
 }
 
-object Model extends Model with LongKeyedMetaMapper[Model] {
-  override def fieldOrder = List(name, brand, product_type)
+object Model extends Model with LongKeyedMetaMapper[Model] with CRUDify[Long, Model] {
+  override def fieldOrder = List(name, brand, productType)
 }
 
 

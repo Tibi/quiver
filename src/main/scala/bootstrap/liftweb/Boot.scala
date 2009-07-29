@@ -26,6 +26,8 @@ class Boot {
     val entries = Menu(Loc("Home", List("index"), "Home")) ::
                   Menu(Loc("Brands", List("brands"), "Brands")) ::
                   Menu(Loc("Product Types", List("product_types"), "Product Types")) ::
+                  Menu(Loc("Models", List("models"), "Models"))::
+                  //Brand.menus::
                   User.sitemap
     LiftRules.setSiteMap(SiteMap(entries:_*))
 
@@ -63,7 +65,7 @@ object DBVendor extends ConnectionManager {
   Class.forName("org.h2.Driver")
 
   def newConnection(name: ConnectionIdentifier): Box[Connection] = try {
-    Full(DriverManager.getConnection("jdbc:h2:db/matosdb"))
+    Full(DriverManager.getConnection("jdbc:h2:db/matosdb;AUTO_SERVER=TRUE"))
   } catch {
     case e: Exception => e.printStackTrace; Empty
   }

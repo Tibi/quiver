@@ -1,0 +1,14 @@
+<lift:surround with="default" at="content">
+  <lift:Models.header>
+    <h1><head:prod_type/> models by <head:brand/></h1>
+  </lift:Models.header>
+  
+  <lift:Models.list>
+    <div class="model"><model:name_and_link/></div>
+  </lift:Models.list>
+  
+  <lift:Models.add form="POST">
+    <model:name/><model:submit/>
+  </lift:Models.add>
+</lift:surround>
+
