@@ -1,6 +1,6 @@
 package tibi.matosdb.model
 
-import _root_.net.liftweb.mapper._ 
+import _root_.net.liftweb.mapper._
 
 class Sport extends LongKeyedMapper[Sport] with IdPK { 
   def getSingleton = Sport
@@ -14,12 +14,10 @@ object Sport extends Sport with LongKeyedMetaMapper[Sport] {
 
 
 class ProductType extends LongKeyedMapper[ProductType] with IdPK {
-	def getSingleton = ProductType
-	
-	object name extends MappedString(this, 100)
-	object sport extends MappedLongForeignKey(this, Sport) {
-    override def dbIndexed_? = true
-  }
+  def getSingleton = ProductType
+
+  object name extends MappedString(this, 100)
+  object sport extends MappedLongForeignKey(this, Sport)
   //TODO object properties extends  Set[Property])
 }
 
@@ -31,22 +29,20 @@ object ProductType extends ProductType with LongKeyedMetaMapper[ProductType] {
 class Brand extends LongKeyedMapper[Brand] with IdPK { 
   def getSingleton = Brand
   object name extends MappedString(this, 100)
+  object mainProductType extends MappedLongForeignKey(this, ProductType)
+  object logo extends MappedString(this, 200)
 }
 
 object Brand extends Brand with LongKeyedMetaMapper[Brand] with CRUDify[Long, Brand] {
-  override def fieldOrder = List(name)
+  override def fieldOrder = List(name, mainProductType, logo)
 }
 
 
 class Model extends LongKeyedMapper[Model] with IdPK { 
   def getSingleton = Model
   object name extends MappedString(this, 100)
-  object brand extends MappedLongForeignKey(this, Brand) {
-    override def dbIndexed_? = true
-  }
-  object productType extends MappedLongForeignKey(this, ProductType) {
-    override def dbIndexed_? = true
-  }
+  object brand extends MappedLongForeignKey(this, Brand)
+  object productType extends MappedLongForeignKey(this, ProductType)
 }
 
 object Model extends Model with LongKeyedMetaMapper[Model] with CRUDify[Long, Model] {
@@ -57,9 +53,7 @@ object Model extends Model with LongKeyedMetaMapper[Model] with CRUDify[Long, Mo
 class Size extends LongKeyedMapper[Size] with IdPK { //TODO extends CanHaveProperties
   def getSingleton = Size
   object name extends MappedString(this, 100)
-  object model extends MappedLongForeignKey(this, Model) {
-    override def dbIndexed_? = true
-  }
+  object model extends MappedLongForeignKey(this, Model)
   //TODO override def isAllowed(prop: Property) = model.prod_type.properties contains prop
 }
 

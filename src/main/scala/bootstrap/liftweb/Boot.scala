@@ -27,8 +27,7 @@ class Boot {
                   Menu(Loc("Brands", List("brands"), "Brands")) ::
                   Menu(Loc("Product Types", List("product_types"), "Product Types")) ::
                   Menu(Loc("Models", List("models"), "Models"))::
-                  //Brand.menus::
-                  User.sitemap
+                  User.sitemap ++ Brand.menus
     LiftRules.setSiteMap(SiteMap(entries:_*))
 
     /*

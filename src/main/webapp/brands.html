@@ -1,7 +1,5 @@
 <lift:surround with="default" at="content">
-  <lift:Brands.header>
-    <h1>Brands providing <product_type:name/></h1>
-  </lift:Brands.header>
+  <h1>Brands<lift:Brands.header> providing <product_type:name/></lift:Brands.header></h1>
   
   <lift:Brands.list>
     <div class="brand"><brand:name_and_link/></div>

@@ -61,20 +61,20 @@ class ProductTypes {
 
 
 class Brands {
-  def header(xhtml: NodeSeq): NodeSeq = bind("product_type", xhtml,
-    "name" -> (currentProductType.is match {
-      case Full(productType) => Text(productType.name)
-      case _ => Text("no product type")
-  }))
+  def header(xhtml: NodeSeq): NodeSeq = currentProductType.is match {
+    case Full(productType) => bind("product_type", xhtml, "name" -> Text(productType.name))
+    case _ => Text("")
+  }
   
-  def list(xhtml: NodeSeq): NodeSeq = Brand.findAll.flatMap(
-    brand => bind("brand", xhtml, "name" -> brand.name.is,
-                  "name_and_link" -> SHtml.link("/models.html",
-                                                () => currentBrand(Full(brand)),
-                                                Text(brand.name.is))))
+  def list(xhtml: NodeSeq): NodeSeq = Brand.findAll(
+    By(Brand.mainProductType, currentProductType.is)).flatMap(
+	    brand => bind("brand", xhtml, "name" -> brand.name.is,
+	                  "name_and_link" -> SHtml.link("/models.html",
+	                                                () => currentBrand(Full(brand)),
+	                                                Text(brand.name.is))))
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = Brand.create.name(name).save
+    def processAdd(): Any = Brand.create.name(name).mainProductType(currentProductType.is).save
     bind("brand", xhtml, "name" -> SHtml.text(name, name = _),
       "submit" -> SHtml.submit("Add", processAdd))
   }
