@@ -18,6 +18,7 @@ class ProductType extends LongKeyedMapper[ProductType] with IdPK {
 
   object name extends MappedString(this, 100)
   object sport extends MappedLongForeignKey(this, Sport)
+  def sportName = sport.obj.map(_.name.is) openOr "Unknown"
   //TODO object properties extends  Set[Property])
 }
 

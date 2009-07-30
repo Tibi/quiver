@@ -62,7 +62,9 @@ class ProductTypes {
 
 class Brands {
   def header(xhtml: NodeSeq): NodeSeq = currentProductType.is match {
-    case Full(productType) => bind("product_type", xhtml, "name" -> Text(productType.name))
+    case Full(productType) => bind("product_type", xhtml,
+                                   "sport" -> Text(productType.sportName),
+                                   "name" -> Text(productType.name))
     case _ => Text("")
   }
   
