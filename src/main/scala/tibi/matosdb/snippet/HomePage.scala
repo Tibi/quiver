@@ -73,12 +73,32 @@ class Brands {
 	    brand => bind("brand", xhtml, "name" -> brand.name.is,
 	                  "name_and_link" -> SHtml.link("/models.html",
 	                                                () => currentBrand(Full(brand)),
-	                                                Text(brand.name.is))))
+	                                                Text(brand.name.is)),
+                      "image" -> <img src={"image/"+brand.logo}/>))
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processAdd(): Any = Brand.create.name(name).mainProductType(currentProductType.is).save
     bind("brand", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("Add", processAdd))
+                         "submit" -> SHtml.submit("Add", processAdd))
+  }
+  
+  private object uploaded extends RequestVar[Box[FileParamHolder]](Empty) 
+  
+  def edit(xhtml: NodeSeq): NodeSeq = {
+    val brand = currentBrand.is match {
+      case Full(b) => b
+      case _ => throw new RuntimeException("editing no brand")
+    }
+    def save(): Any = {
+      val image = brand.logo.obj openOr AnImage.create
+      uploaded.is.map(fileParam => image.data(fileParam.file))
+      image.save
+      brand.logo(image).save
+    }
+    bind("form", xhtml, "name" -> SHtml.text(brand.name, brand.name(_)),
+                        "file_upload" -> fileUpload(upl => uploaded(Full(upl))),
+                   //     "mainPT" -> SHtml.select()
+                        "submit" -> SHtml.submit("Save", save))
   }
 }
 

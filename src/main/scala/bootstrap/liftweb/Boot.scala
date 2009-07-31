@@ -20,14 +20,17 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("tibi.matosdb")
-    Schemifier.schemify(true, Log.infoF _, User, Sport, ProductType, Brand, Model)
+    Schemifier.schemify(true, Log.infoF _, User, AnImage, Sport, ProductType, Brand, Model)
 
     // Build SiteMap
-    val entries = Menu(Loc("Home", List("index"), "Home")) ::
-                  Menu(Loc("Brands", List("brands"), "Brands")) ::
-                  Menu(Loc("Product Types", List("product_types"), "Product Types")) ::
+    val entries = Menu(Loc("Home", List("index"), "Home"))::
+                  Menu(Loc("Brands", List("brands"), "Brands"))::
+                  Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
+                  Brand.menus:::
+                  Menu(Loc("Product Types", List("product_types"), "Product Types"))::
                   Menu(Loc("Models", List("models"), "Models"))::
-                  User.sitemap ++ Brand.menus
+                  User.sitemap:::
+                  Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
 
     /*

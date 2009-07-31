@@ -1,6 +1,18 @@
 package tibi.matosdb.model
 
+import scala.xml.NodeSeq
+import net.liftweb.util.{Box, Full}
 import _root_.net.liftweb.mapper._
+
+
+class AnImage extends LongKeyedMapper[AnImage] with IdPK { 
+  def getSingleton = AnImage
+  object fileName extends MappedString(this, 100)
+  object mimeType extends MappedString(this, 50)
+  object data extends MappedBinary(this)
+}
+
+object AnImage extends AnImage with LongKeyedMetaMapper[AnImage] 
 
 class Sport extends LongKeyedMapper[Sport] with IdPK { 
   def getSingleton = Sport
@@ -31,7 +43,7 @@ class Brand extends LongKeyedMapper[Brand] with IdPK {
   def getSingleton = Brand
   object name extends MappedString(this, 100)
   object mainProductType extends MappedLongForeignKey(this, ProductType)
-  object logo extends MappedString(this, 200)
+  object logo extends MappedLongForeignKey(this, AnImage)
 }
 
 object Brand extends Brand with LongKeyedMetaMapper[Brand] with CRUDify[Long, Brand] {
