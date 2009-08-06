@@ -1,9 +1,12 @@
 package tibi.matosdb.model
 
 import scala.xml.NodeSeq
-import net.liftweb.util.{Box, Full}
-import _root_.net.liftweb.mapper._
 
+import net.liftweb._ 
+import mapper._ 
+import http._ 
+import SHtml._ 
+import util._
 
 class AnImage extends LongKeyedMapper[AnImage] with IdPK { 
   def getSingleton = AnImage
@@ -42,7 +45,10 @@ object ProductType extends ProductType with LongKeyedMetaMapper[ProductType] {
 class Brand extends LongKeyedMapper[Brand] with IdPK { 
   def getSingleton = Brand
   object name extends MappedString(this, 100)
-  object mainProductType extends MappedLongForeignKey(this, ProductType)
+  object mainProductType extends MappedLongForeignKey(this, ProductType) {
+    override def _toForm = Full(select(ProductType.findAll.map(pt => (pt.id.toString, pt.name)),
+                                       Full(is.toString), f => this(f.toInt)))
+  }
   object logo extends MappedLongForeignKey(this, AnImage)
 }
 
