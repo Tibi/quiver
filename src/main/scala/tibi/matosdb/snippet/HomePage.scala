@@ -74,7 +74,7 @@ class Brands {
 	                  "name_and_link" -> SHtml.link("/models.html",
 	                                                () => currentBrand(Full(brand)),
 	                                                Text(brand.name.is)),
-                      "image" -> <img src={"image/"+brand.logo}/>))
+                      "image" -> <img src={"imageSrv/"+brand.logo}/>))
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processAdd(): Any = Brand.create.name(name).mainProductType(currentProductType.is).save
@@ -90,14 +90,14 @@ class Brands {
       case _ => throw new RuntimeException("editing no brand")
     }
     def save(): Any = {
-      val image = brand.logo.obj openOr AnImage.create
+      val image = brand.logo.obj openOr Image.create
       uploaded.is.map(fileParam => image.data(fileParam.file))
       image.save
       brand.logo(image).save
     }
     bind("form", xhtml, "name" -> SHtml.text(brand.name, brand.name(_)),
                         "file_upload" -> fileUpload(upl => uploaded(Full(upl))),
-                   //     "mainPT" -> SHtml.select()
+                        "mainPT" -> brand.mainProductType._toForm,
                         "submit" -> SHtml.submit("Save", save))
   }
 }

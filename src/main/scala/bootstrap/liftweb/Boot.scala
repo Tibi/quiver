@@ -10,6 +10,8 @@ import _root_.java.sql.{Connection, DriverManager}
 import _root_.tibi.matosdb.model._
 import _root_.javax.servlet.http.{HttpServletRequest}
 
+import tibi.matosdb.view.ImageServer
+
 /**
   * A class that's instantiated early and run.  It allows the application
   * to modify lift's environment
@@ -20,7 +22,7 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("tibi.matosdb")
-    Schemifier.schemify(true, Log.infoF _, User, AnImage, Sport, ProductType, Brand, Model)
+    Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model)
 
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home"))::
@@ -32,7 +34,9 @@ class Boot {
                   User.sitemap:::
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
-
+    
+    LiftRules.dispatch.append(ImageServer.matcher)
+    
     /*
      * Show the spinny image when an Ajax call starts
      */

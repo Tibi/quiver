@@ -8,14 +8,14 @@ import http._
 import SHtml._ 
 import util._
 
-class AnImage extends LongKeyedMapper[AnImage] with IdPK { 
-  def getSingleton = AnImage
+class Image extends LongKeyedMapper[Image] with IdPK { 
+  def getSingleton = Image
   object fileName extends MappedString(this, 100)
   object mimeType extends MappedString(this, 50)
   object data extends MappedBinary(this)
 }
 
-object AnImage extends AnImage with LongKeyedMetaMapper[AnImage] 
+object Image extends Image with LongKeyedMetaMapper[Image] 
 
 class Sport extends LongKeyedMapper[Sport] with IdPK { 
   def getSingleton = Sport
@@ -49,7 +49,7 @@ class Brand extends LongKeyedMapper[Brand] with IdPK {
     override def _toForm = Full(select(ProductType.findAll.map(pt => (pt.id.toString, pt.name)),
                                        Full(is.toString), f => this(f.toInt)))
   }
-  object logo extends MappedLongForeignKey(this, AnImage)
+  object logo extends MappedLongForeignKey(this, Image)
 }
 
 object Brand extends Brand with LongKeyedMetaMapper[Brand] with CRUDify[Long, Brand] {
