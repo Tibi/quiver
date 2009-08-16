@@ -12,6 +12,7 @@ class Image extends LongKeyedMapper[Image] with IdPK {
   def getSingleton = Image
   object fileName extends MappedString(this, 100)
   object mimeType extends MappedString(this, 50)
+  object saveTime extends MappedDateTime(this)
   object data extends MappedBinary(this)
 }
 

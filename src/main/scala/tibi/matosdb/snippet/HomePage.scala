@@ -1,5 +1,7 @@
 package tibi.matosdb.snippet
 
+import java.util.Date
+
 import scala.xml._
 import net.liftweb._
 
@@ -12,7 +14,8 @@ import SHtml._
 import scala.xml._
 import Helpers._  
 
-import tibi.matosdb.model._
+import model._
+import view.ImageServer
 
 object currentSport extends SessionVar[Box[Sport]](Empty)
 object currentProductType extends SessionVar[Box[ProductType]](Empty)
@@ -70,11 +73,13 @@ class Brands {
   
   def list(xhtml: NodeSeq): NodeSeq = Brand.findAll(
     By(Brand.mainProductType, currentProductType.is)).flatMap(
-	    brand => bind("brand", xhtml, "name" -> brand.name.is,
-	                  "name_and_link" -> SHtml.link("/models.html",
-	                                                () => currentBrand(Full(brand)),
-	                                                Text(brand.name.is)),
-                      "image" -> <img src={"imageSrv/"+brand.logo}/>))
+	    brand => bind("brand", xhtml,
+                   "link" -> SHtml.link("/models.html", () => currentBrand(Full(brand)),
+                                        brand.logo.obj match {
+                     case Full(img) => <img src={"imageSrv/"+img.id.is}/>
+                     case _ => Text(brand.name.is)
+  })))
+  
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processAdd(): Any = Brand.create.name(name).mainProductType(currentProductType.is).save
@@ -92,7 +97,7 @@ class Brands {
     def save(): Any = {
       val image = brand.logo.obj openOr Image.create
       uploaded.is.map(fileParam => image.data(fileParam.file))
-      image.save
+      ImageServer.save(image)
       brand.logo(image).save
     }
     bind("form", xhtml, "name" -> SHtml.text(brand.name, brand.name(_)),

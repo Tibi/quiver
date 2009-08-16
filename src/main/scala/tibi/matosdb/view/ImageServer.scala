@@ -1,18 +1,25 @@
 package tibi.matosdb.view
 
+import java.util.Date
+
 import net.liftweb._ 
 import mapper._ 
 import http._ 
 import util._
 import ControlHelpers.tryo
+import TimeHelpers.{toInternetDate, parseInternetDate}
 
 import model.Image
 
+// Taken from http://www.mail-archive.com/liftweb@googlegroups.com/msg08344.html
 object ImageServer {
+  
+  object cache extends KeyedCache[Long, Image](100, Full(0.75f), 
+                        (id:Long) => Image.find(By(Image.id, id)))
   
   object TestImage {
     def unapply(in: String): Option[Image] = try {
-        Image.find(By(Image.id, in.toLong))
+        cache(in.toLong)
     } catch { case _:NumberFormatException => None }
   }
 
@@ -21,16 +28,30 @@ object ImageServer {
                  Nil, _, GetRequest) => () => serveImage(img, r)
   }
 
+  def isModifiedSince(req: Req, since: Long): Boolean = {
+    // TODO test, I’ve just copied it from the internet
+    val mod = req.request.getHeader("if-modified-since")
+    mod == null || ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime
+    // if (mod != null && ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime) InMemoryResponse(new Array[Byte](0), Nil, Nil, 304) 
+  }
+  
   def serveImage(img: Image, r: Req): Box[LiftResponse] = {
-  /*  if (r.testIfModifiedSince(img.saveTime))
-    Full(InMemoryResponse(new Array[Byte](0),
+    if (! isModifiedSince(r, img.saveTime.getDate)) {
+      println(304)
+      Full(InMemoryResponse(new Array[Byte](0),
                           List("Last-Modified" ->
                                toInternetDate(img.saveTime.is)), Nil, 304))
-    else */ Full(InMemoryResponse(img.data.is,
-                               List(/*"Last-Modified" ->
-                                    toInternetDate(img.saveTime.is),*/
+    }
+    else Full(InMemoryResponse(img.data.is,
+                               List("Last-Modified" ->
+                               			toInternetDate(img.saveTime.is),
                                     "Content-Type" -> img.mimeType.is,
                                     "Content-Length" ->
-                                    img.data.is.length.toString), Nil, 200))
+                                    	img.data.is.length.toString), Nil, 200))
+  }
+  
+  def save(image: Image) {
+    image.saveTime(new Date).save
+    cache.update(image.id, image)
   }
 }
