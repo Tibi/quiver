@@ -7,7 +7,7 @@ import mapper._
 import http._ 
 import util._
 import ControlHelpers.tryo
-import TimeHelpers.{toInternetDate, parseInternetDate}
+import TimeHelpers.{toInternetDate, parseInternetDate, now}
 
 import model.Image
 
@@ -29,7 +29,7 @@ object ImageServer {
   }
 
   def isModifiedSince(req: Req, since: Long): Boolean = {
-    // TODO test, I’ve just copied it from the internet
+    // TODO test, Iâ€™ve just copied it from the internet
     val mod = req.request.getHeader("if-modified-since")
     mod == null || ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime
     // if (mod != null && ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime) InMemoryResponse(new Array[Byte](0), Nil, Nil, 304) 
@@ -51,7 +51,7 @@ object ImageServer {
   }
   
   def save(image: Image) {
-    image.saveTime(new Date).save
+    image.saveTime(now).save
     cache.update(image.id, image)
   }
 }

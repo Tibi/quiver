@@ -17,10 +17,8 @@ import Helpers._
 import model._
 import view.ImageServer
 
+
 object currentSport extends SessionVar[Box[Sport]](Empty)
-object currentProductType extends SessionVar[Box[ProductType]](Empty)
-object currentBrand extends SessionVar[Box[Brand]](Empty)
-object currentModel extends SessionVar[Box[Model]](Empty)
 
 class Sports {
   
@@ -37,6 +35,8 @@ class Sports {
   }
 }
 
+
+object currentProductType extends SessionVar[Box[ProductType]](Empty)
 
 class ProductTypes {
   
@@ -62,6 +62,8 @@ class ProductTypes {
   }
 }
 
+
+object currentBrand extends SessionVar[Box[Brand]](Empty)
 
 class Brands {
   def header(xhtml: NodeSeq): NodeSeq = currentProductType.is match {
@@ -106,6 +108,9 @@ class Brands {
                         "submit" -> SHtml.submit("Save", save))
   }
 }
+
+
+object currentModel extends SessionVar[Box[Model]](Empty)
 
 class Models {
   def header(xhtml: NodeSeq): NodeSeq = bind("head", xhtml,

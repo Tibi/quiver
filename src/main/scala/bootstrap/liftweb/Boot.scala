@@ -18,34 +18,37 @@ import tibi.matosdb.view.ImageServer
   */
 class Boot {
   def boot {
+    
+    // Defines the database to use.
     DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
-
-    // where to search snippet
+    
+    // package to search for snippets, models and views
     LiftRules.addToPackages("tibi.matosdb")
-    Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model)
+    
+    // Model classes to map to the database
+    Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model, Size,
+                        Property, PropertyValue)
 
-    // Build SiteMap
+    // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::
                   Menu(Loc("Brands", List("brands"), "Brands"))::
                   Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
                   Brand.menus:::
                   Menu(Loc("Product Types", List("product_types"), "Product Types"))::
+                	  Property.sitemap:::
                   Menu(Loc("Models", List("models"), "Models"))::
                   User.sitemap:::
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
     
+    // Adds our image server to the request processing chain.
     LiftRules.dispatch.append(ImageServer.matcher)
     
-    /*
-     * Show the spinny image when an Ajax call starts
-     */
+    // Shows the spinny image when an Ajax call starts.
     LiftRules.ajaxStart =
       Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
 
-    /*
-     * Make the spinny image go away when it ends
-     */
+    // Makes the spinny image go away when it ends
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
@@ -63,9 +66,7 @@ class Boot {
 
 }
 
-/**
-* Database connection calculation
-*/
+
 object DBVendor extends ConnectionManager {
 
   Class.forName("org.h2.Driver")
