@@ -8,6 +8,8 @@ import http._
 import SHtml._ 
 import util._
 
+import MultiString._
+
 class Image extends LongKeyedMapper[Image] with IdPK { 
   object fileName extends MappedString(this, 100)
   object mimeType extends MappedString(this, 50)
