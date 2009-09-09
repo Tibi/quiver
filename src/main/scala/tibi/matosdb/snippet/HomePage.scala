@@ -24,6 +24,7 @@ class Sports {
   
   def list(xhtml: NodeSeq): NodeSeq = Sport.findAll.flatMap(
     sport => bind("sport", xhtml, "name" -> sport.name.is,
+                  //TODO use sitemap to get links
                   "name_and_link" -> SHtml.link("/product_types.html",
                                                 () => currentSport(Full(sport)),
                                                 Text(sport.name.is))))

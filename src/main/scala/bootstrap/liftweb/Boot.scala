@@ -4,11 +4,9 @@ import _root_.net.liftweb.util._
 import _root_.net.liftweb.http._
 import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
-import Helpers._
 import _root_.net.liftweb.mapper.{DB, ConnectionManager, Schemifier, DefaultConnectionIdentifier, ConnectionIdentifier}
 import _root_.java.sql.{Connection, DriverManager}
 import _root_.tibi.matosdb.model._
-import _root_.javax.servlet.http.{HttpServletRequest}
 
 import tibi.matosdb.view.ImageServer
 
@@ -31,11 +29,10 @@ class Boot {
 
     // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::
-                  Menu(Loc("Brands", List("brands"), "Brands"))::
+                  Menu(Loc("Brands", List("brands"), "Brands"), Brand.menus:_*)::
                   Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
-                  Brand.menus:::
                   Menu(Loc("Product Types", List("product_types"), "Product Types"))::
-                	  Property.sitemap:::
+                  Property.menus:::
                   Menu(Loc("Models", List("models"), "Models"))::
                   User.sitemap:::
                   Nil
@@ -60,7 +57,7 @@ class Boot {
   /**
    * Force the request to be UTF-8
    */
-  private def makeUtf8(req: HttpServletRequest) {
+  private def makeUtf8(req: provider.HTTPRequest) {
     req.setCharacterEncoding("UTF-8")
   }
 

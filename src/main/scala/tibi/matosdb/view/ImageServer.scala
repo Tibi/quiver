@@ -30,8 +30,10 @@ object ImageServer {
 
   def isModifiedSince(req: Req, since: Long): Boolean = {
     // TODO test, I’ve just copied it from the internet
-    val mod = req.request.getHeader("if-modified-since")
-    mod == null || ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime
+    req.request.header("if-modified-since") match {
+      case Full(mod) => ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime 
+      case _ => false
+    }
     // if (mod != null && ((since / 1000L) * 1000L) <= parseInternetDate(mod).getTime) InMemoryResponse(new Array[Byte](0), Nil, Nil, 304) 
   }
   
