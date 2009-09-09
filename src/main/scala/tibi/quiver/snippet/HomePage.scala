@@ -1,4 +1,4 @@
-package tibi.matosdb.snippet
+package tibi.quiver.snippet
 
 import java.util.Date
 

@@ -1,4 +1,4 @@
-package tibi.matosdb
+package tibi.quiver
 
 import _root_.java.io.File
 import _root_.junit.framework._

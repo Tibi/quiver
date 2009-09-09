@@ -1,4 +1,4 @@
-package tibi.matosdb.model
+package tibi.quiver.model
 
 import scala.xml.NodeSeq
 

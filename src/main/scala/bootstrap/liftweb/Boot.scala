@@ -6,9 +6,9 @@ import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
 import _root_.net.liftweb.mapper.{DB, ConnectionManager, Schemifier, DefaultConnectionIdentifier, ConnectionIdentifier}
 import _root_.java.sql.{Connection, DriverManager}
-import _root_.tibi.matosdb.model._
+import _root_.tibi.quiver.model._
 
-import tibi.matosdb.view.ImageServer
+import tibi.quiver.view.ImageServer
 
 /**
   * A class that's instantiated early and run.  It allows the application
@@ -21,7 +21,7 @@ class Boot {
     DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
     
     // package to search for snippets, models and views
-    LiftRules.addToPackages("tibi.matosdb")
+    LiftRules.addToPackages("tibi.quiver")
     
     // Model classes to map to the database
     Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model, Size,
@@ -69,7 +69,7 @@ object DBVendor extends ConnectionManager {
   Class.forName("org.h2.Driver")
 
   def newConnection(name: ConnectionIdentifier): Box[Connection] = try {
-    Full(DriverManager.getConnection("jdbc:h2:db/matosdb;AUTO_SERVER=TRUE"))
+    Full(DriverManager.getConnection("jdbc:h2:db/quiver;AUTO_SERVER=TRUE"))
   } catch {
     case e: Exception => e.printStackTrace; Empty
   }
