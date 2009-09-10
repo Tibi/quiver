@@ -15,19 +15,28 @@ import scala.xml._
 import Helpers._  
 
 import model._
-import view.ImageServer
+import MultiString._
 
+import view.ImageServer
 
 object currentSport extends SessionVar[Box[Sport]](Empty)
 
+object lang extends SessionVar[Lang](English)
+object implicits {
+  implicit def MMString2String(mmstr: MappedMString[_]): String = mmstr.is(lang.is)
+  implicit def String2MString(str: String): MString = MString(lang.is -> str)
+}
+import implicits._
+
+
 class Sports {
-  
   def list(xhtml: NodeSeq): NodeSeq = Sport.findAll.flatMap(
-    sport => bind("sport", xhtml, "name" -> sport.name.is,
+    sport => bind("sport", xhtml, "name" -> sport.name,
                   //TODO use sitemap to get links
                   "name_and_link" -> SHtml.link("/product_types.html",
                                                 () => currentSport(Full(sport)),
-                                                Text(sport.name.is))))
+                                                Text(sport.name)))
+    )
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processAdd(): Any = Sport.create.name(name).save
@@ -50,10 +59,10 @@ class ProductTypes {
     "name" -> Text(forSport.name))
 
   def list(xhtml: NodeSeq): NodeSeq = forSport.productTypes.flatMap(
-    productType => bind("product_type", xhtml, "name" -> productType.name.is,
+    productType => bind("product_type", xhtml, "name" -> productType.name,
                   "name_and_link" -> SHtml.link("/brands.html",
                                                 () => currentProductType(Full(productType)),
-                                                Text(productType.name.is))))
+                                                Text(productType.name))))
 
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
@@ -70,7 +79,7 @@ class Brands {
   def header(xhtml: NodeSeq): NodeSeq = currentProductType.is match {
     case Full(productType) => bind("product_type", xhtml,
                                    "sport" -> Text(productType.sportName),
-                                   "name" -> Text(productType.name))
+                                   "name"  -> Text(productType.name))
     case _ => Text("")
   }
   

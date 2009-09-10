@@ -21,7 +21,7 @@ class Image extends LongKeyedMapper[Image] with IdPK {
 object Image extends Image with LongKeyedMetaMapper[Image] 
 
 class Sport extends LongKeyedMapper[Sport] with IdPK { 
-  object name extends MappedMultiString(this, 100)
+  object name extends MappedMString(this, 100)
   def productTypes = ProductType.findAll(By(ProductType.sport, this))
   def getSingleton = Sport
 }
@@ -32,9 +32,9 @@ object Sport extends Sport with LongKeyedMetaMapper[Sport] {
 
 
 class ProductType extends LongKeyedMapper[ProductType] with IdPK {
-  object name extends MappedMultiString(this, 100)
+  object name extends MappedMString(this, 100)
   object sport extends MappedLongForeignKey(this, Sport)
-  def sportName = sport.obj.map(_.name.is) open_!
+  def sportName = sport.obj.open_!.name
   def possibleProperties = for (ptp <- ProductTypeProperty.findAll(By(ProductTypeProperty.productType, this.id)))
     yield ptp.property.obj
   def getSingleton = ProductType
@@ -56,7 +56,8 @@ object ProductTypeProperty extends ProductTypeProperty with LongKeyedMetaMapper[
 class Brand extends LongKeyedMapper[Brand] with IdPK { 
   object name extends MappedString(this, 100)
   object mainProductType extends MappedLongForeignKey(this, ProductType) {
-    override def _toForm = Full(select(ProductType.findAll.map(pt => (pt.id.toString, pt.name)),
+    override def _toForm = Full(select(ProductType.findAll.map(pt =>
+                                        (pt.id.toString, pt.name.toString)), //TODO get name in the right language
                                        Full(is.toString), f => this(f.toInt)))
   }
   object logo extends MappedLongForeignKey(this, Image)
@@ -101,7 +102,7 @@ object PropertyType extends Enumeration {
 }
 
 class Property extends LongKeyedMapper[Property] with IdPK {
-  object name extends MappedMultiString(this, 100)
+  object name extends MappedMString(this, 100)
   object unit extends MappedString(this, 20)
   object type_ extends MappedEnum(this, PropertyType)
   def getSingleton = Property
