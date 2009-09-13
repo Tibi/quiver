@@ -1,0 +1,17 @@
+<lift:surround with="default" at="content">
+ 
+  <lift:ModelSnip.header>
+    <h1><model:brand/> <model:name/></h1>
+  </lift:ModelSnip.header>
+  
+  <table>
+    <thead><tr><td>Size</td><lift:ModelSnip.properties><td><prop:name/></td></lift:ModelSnip.properties></tr></thead>
+    <tbody>
+      <lift:ModelSnip.sizes><tr>
+        <td><size:name/></td>
+        <size:prop-values><td><prop:val/></td></size:prop-values>
+      </tr></lift:ModelSnip.sizes>
+    </tbody>
+  </table>
+  
+</lift:surround>

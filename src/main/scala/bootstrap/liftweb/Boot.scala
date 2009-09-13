@@ -25,7 +25,7 @@ class Boot {
     
     // Model classes to map to the database
     Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model, Size,
-                        Property, PropertyValue)
+                        Property, PropertyValue, ProductTypeProperty)
 
     // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::
@@ -34,6 +34,7 @@ class Boot {
                   Menu(Loc("Product Types", List("product_types"), "Product Types"))::
                   Property.menus:::
                   Menu(Loc("Models", List("models"), "Models"))::
+                  Menu(Loc("Model", List("model"), "Model"))::
                   User.sitemap:::
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))

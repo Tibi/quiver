@@ -140,7 +140,7 @@ class Models {
   def list(xhtml: NodeSeq): NodeSeq = Model.findAll(By(Model.brand, forBrand),
                                                     By(Model.productType, forProductType)).flatMap(
     model => bind("model", xhtml, "name" -> model.name.is,
-                  "name_and_link" -> SHtml.link("/model_detail.html",
+                  "name_and_link" -> SHtml.link("/model.html",
                                                 () => currentModel(Full(model)),
                                                 Text(model.name.is))))
   def add(xhtml: NodeSeq): NodeSeq = {
@@ -149,4 +149,18 @@ class Models {
     bind("model", xhtml, "name" -> SHtml.text(name, name = _),
       "submit" -> SHtml.submit("Add", processAdd))
   }
+}
+
+class ModelSnip {
+  val model = currentModel.is.open_!
+  def header(xhtml: NodeSeq): NodeSeq = bind("model", xhtml,
+        "brand" -> model.brand.obj.open_!.name,
+        "name" -> model.name)
+  def properties(xhtml: NodeSeq): NodeSeq =
+    currentProductType.is.open_!.properties.flatMap(
+    		prop => bind("prop", xhtml, "name" -> Text(prop.open_!.name)))
+  def sizes(xhtml: NodeSeq): NodeSeq =
+    model.sizes.flatMap(size => bind("size", xhtml, "name" -> size.name, "prop-values" ->
+        size.propertyValues.flatMap(propVal => bind("prop",
+            chooseTemplate("size", "prop-values", xhtml), "val" -> propVal.valStr))))
 }
