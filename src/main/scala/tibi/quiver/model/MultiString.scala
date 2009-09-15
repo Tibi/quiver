@@ -1,11 +1,13 @@
 package tibi.quiver.model
 
 import scala.collection.immutable.EmptyMap
+import scala.xml._
 import java.lang.reflect.Method
 import java.util.Date
 import net.liftweb._
 import util._
 import mapper._
+import http.SHtml
 
 object MultiString {
 
@@ -114,5 +116,10 @@ object MultiString {
      
     import http.js._
     def asJsExp: JsExp = JE.Str(is.toString) //TODO also convert to string?
+      
+    override def _toForm: Box[NodeSeq] = Full(SHtml.text(data(DefaultLang), this.setFromAny(_)))
+//      S.fmapFunc({s: List[String] => this.setFromAny(s)}) {
+//      funcName => Full(<input type='text' id={fieldId} name={funcName} value={}/>)
+//    }
   }
 }

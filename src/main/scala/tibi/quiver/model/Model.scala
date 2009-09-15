@@ -97,11 +97,11 @@ object Size extends Size with LongKeyedMetaMapper[Size] {
 
 object PropertyType extends Enumeration {
   type PropertyType = Value
-  val String = Value("str")
-  val Int = Value("int")
+  val String = Value("string")
+  val Int = Value("integer")
   val Decimal = Value("decimal")
   val Date =  Value("date")
-  val Bool = Value("bool")
+  val Bool = Value("boolean")
 }
 
 class Property extends LongKeyedMapper[Property] with IdPK {
