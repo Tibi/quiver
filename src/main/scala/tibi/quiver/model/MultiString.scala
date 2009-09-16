@@ -9,6 +9,7 @@ import util._
 import mapper._
 import http.SHtml
 
+
 object MultiString {
 
   /** The type used to specify the language. */
