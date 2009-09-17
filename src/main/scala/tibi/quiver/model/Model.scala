@@ -42,18 +42,6 @@ object ProductType extends ProductType with MNamedMetaMapper[ProductType] {
 }
 
 
-class ProductTypeProperty extends MyMapper[ProductTypeProperty] {
-  object productType extends MappedLongForeignKey(this, ProductType)
-  object property extends MappedLongForeignKey(this, Property)
-  object order extends MappedInt(this)
-  def getSingleton = ProductTypeProperty
-}
-object ProductTypeProperty extends ProductTypeProperty with MyMetaMapper[ProductTypeProperty] {
-  def join(pt: ProductType, prop: Property, order: Int) =
-    create.productType(pt).property(prop).order(order).save
-}
-
-
 class Brand extends NamedMapper[Brand] { 
   object mainProductType extends MappedLongForeignKey(this, ProductType) {
     override def _toForm = Full(select(ProductType.findAll.map(pt => (pt.id.toString, pt.name.toString)), //TODO get name in the right language
@@ -99,11 +87,11 @@ object PropertyType extends Enumeration {
 
 class Property extends MNamedMapper[Property] {
   object unit extends MappedString(this, 20)
-  object type_ extends MappedEnum(this, PropertyType)
+  object dataType extends MappedEnum(this, PropertyType)
   def getSingleton = Property
 }
 object Property extends Property with MNamedMetaMapper[Property] with CRUDify[Long, Property] {
-  override def fieldOrder = List(name, unit, type_)
+  override def fieldOrder = List(name, unit, dataType)
 }
 
 
@@ -117,4 +105,16 @@ class PropertyValue extends MyMapper[PropertyValue] {
 }
 object PropertyValue extends PropertyValue with MyMetaMapper[PropertyValue] {
   override def fieldOrder = List(property)
+}
+
+
+class ProductTypeProperty extends MyMapper[ProductTypeProperty] {
+  object productType extends MappedLongForeignKey(this, ProductType)
+  object property extends MappedLongForeignKey(this, Property)
+  object order extends MappedInt(this)
+  def getSingleton = ProductTypeProperty
+}
+object ProductTypeProperty extends ProductTypeProperty with MyMetaMapper[ProductTypeProperty] {
+  def join(pt: ProductType, prop: Property, order: Int) =
+    create.productType(pt).property(prop).order(order).save
 }
