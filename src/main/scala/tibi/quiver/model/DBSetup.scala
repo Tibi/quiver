@@ -14,7 +14,7 @@ object DBSetup {
   def create[What <: MNamedMapper[What]](meta: MetaMapper[What], name: MString): What =
     meta.findAll.filter(_.name.is(DefaultLang) == name(DefaultLang)) match {
       case Nil => meta.create.name(name)
-      case one :: _ => println(one); one
+      case one :: _ => one
   }
   
   def associateProps2PT(pt: ProductType, props: Seq[Property]) {
@@ -30,11 +30,12 @@ object DBSetup {
    */
   def setup {
     val wind = create(Sport, str("Windsurf", "Planche à voile"))
+    wind.save
     val board = create(ProductType, str("Board", "Flotteur")).sport(wind)
     val sail = create(ProductType, str("Sail", "Voile")).sport(wind)
     val mast = create(ProductType, str("Mast", "Mât")).sport(wind)
     val boom = create(ProductType, str("Boom", "Wishbone")).sport(wind)
-    List(wind, board, sail, mast, boom) foreach { _.save }
+    List(board, sail, mast, boom) foreach { _.save }
     
     // Board properties
     val width = create(Property, str("Width", "Largeur")).unit("cm").dataType(PropertyType.Decimal)

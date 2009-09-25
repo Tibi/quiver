@@ -5,13 +5,20 @@
   </lift:ModelSnip.header>
   
   <table>
-    <thead><tr><td>Size</td><lift:ModelSnip.properties><td><prop:name/></td></lift:ModelSnip.properties></tr></thead>
+    <thead><tr>
+        <td>Size</td>
+        <lift:ModelSnip.properties><td><prop:name/></td></lift:ModelSnip.properties>
+        <td>Action</td>
+    </tr></thead>
     <tbody>
       <lift:ModelSnip.sizes><tr>
         <td><size:name/></td>
-        <size:prop-values><td><prop:val/></td></size:prop-values>
+        <size:prop_values><td><prop:val/></td></size:prop_values>
+        <td><size:edit_link/><size:delete_link/></td>
       </tr></lift:ModelSnip.sizes>
     </tbody>
   </table>
+  
+  <lift:ModelSnip.add_link/>
   
 </lift:surround>

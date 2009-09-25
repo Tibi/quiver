@@ -36,6 +36,8 @@ class Boot {
                   Property.menus:::
                   Menu(Loc("Models", List("models"), "Models"))::
                   Menu(Loc("Model", List("model"), "Model"))::
+                  Menu(Loc("Model edit", List("model_edit"), "Edit Model"))::
+                  Menu(Loc("Size edit", List("size_edit"), "Edit Size"))::
                   User.sitemap:::
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))

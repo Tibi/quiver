@@ -24,7 +24,7 @@ object currentSport extends SessionVar[Box[Sport]](Empty)
 object lang extends SessionVar[Lang](English)
 object implicits {
   implicit def MMString2String(mmstr: MappedMString[_]): String = mmstr.is(lang.is)
-  implicit def String2MString(str: String): MString = MString(lang.is -> str)
+  //implicit def String2MString(str: String): MString = MString(lang.is -> str)
 }
 import implicits._
 
@@ -39,7 +39,7 @@ class Sports {
     )
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = Sport.create.name(name).save
+    def processAdd(): Any = Sport.create.name(MString(lang.is -> name)).save
     bind("sport", xhtml, "name" -> SHtml.text(name, name = _),
       "submit" -> SHtml.submit("Add", processAdd))
   }
@@ -66,7 +66,7 @@ class ProductTypes {
 
   def add(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = ProductType.create.name(name).sport(currentSport.is).save
+    def processAdd(): Any = ProductType.create.name(MString(lang.is -> name)).sport(currentSport.is).save
     bind("product_type", xhtml, "name" -> SHtml.text(name, name = _),
       "submit" -> SHtml.submit("Add", processAdd))
   }
@@ -151,16 +151,49 @@ class Models {
   }
 }
 
+object currentSize extends RequestVar[Box[Size]](Empty)
+
 class ModelSnip {
   val model = currentModel.is.open_!
+  
   def header(xhtml: NodeSeq): NodeSeq = bind("model", xhtml,
         "brand" -> model.brand.obj.open_!.name,
         "name" -> model.name)
+  
   def properties(xhtml: NodeSeq): NodeSeq =
     currentProductType.is.open_!.properties.flatMap(
-    		prop => bind("prop", xhtml, "name" -> Text(prop.open_!.name)))
+    		prop => bind("prop", xhtml, "name" -> Text(prop.name)))
+  
   def sizes(xhtml: NodeSeq): NodeSeq =
-    model.sizes.flatMap(size => bind("size", xhtml, "name" -> size.name, "prop-values" ->
-        size.propertyValues.flatMap(propVal => bind("prop",
-            chooseTemplate("size", "prop-values", xhtml), "val" -> propVal.valStr))))
+    model.sizes.flatMap(size => bind("size", xhtml,
+        "name" -> size.name,
+        "prop_values" -> currentProductType.is.open_!.properties.flatMap(prop => {
+          val propVal = size.propertyValue(prop)
+          bind("prop", chooseTemplate("size", "prop_values", xhtml),
+               "val" -> propVal.openOr(""))}),
+        "edit_link" -> link("size_edit", () => currentSize(Full(size)), Text("Edit")),
+        "delete_link" -> link("#", () => deleteSize(size), Text("Delete"))))
+  
+  def add_link(xhtml: NodeSeq): NodeSeq = link("size_edit", () => currentSize(Empty), Text("Add"))
+  
+  private def deleteSize(size: Size) {
+    if (size.delete_!) S.notice("size "+size+" deleted")
+    else S.error("impossible to delete "+size)
+  }
+}
+
+
+class SizeSnip {
+  if (!currentSize.is.isDefined) currentSize(Full(Size.create.model(currentModel.is)))
+  val size = currentSize.is.open_!
+  
+  def edit_form(xhtml: NodeSeq): NodeSeq = bind("form", xhtml,
+      "name" -> SHtml.text(size.name, size.name(_)),
+      "property_values" -> currentModel.is.open_!.productType.obj.open_!.properties.flatMap(prop => {
+        val propName = prop.name.is(lang)
+        <div><label for="{propName}">{propName}</label>{
+          SHtml.text(size.propertyValue(prop).openOr(""), size.setPropertyValue(prop, _))
+        }</div>
+      }),
+      "submit" -> SHtml.submit("Save", () => { size.save; S.redirectTo("model") }))
 }

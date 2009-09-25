@@ -34,7 +34,7 @@ class ProductType extends MNamedMapper[ProductType] {
   object sport extends MappedLongForeignKey(this, Sport)
   def sportName = sport.obj.open_!.name
   def properties = for (ptp <- ProductTypeProperty.findAll(By(ProductTypeProperty.productType, this.id)))
-    yield ptp.property.obj
+    yield ptp.property.obj.open_!
   def getSingleton = ProductType
 }
 object ProductType extends ProductType with MNamedMetaMapper[ProductType] {
@@ -69,6 +69,18 @@ object Model extends Model with LongKeyedMetaMapper[Model] with CRUDify[Long, Mo
 class Size extends NamedMapper[Size] {
   object model extends MappedLongForeignKey(this, Model)
   def propertyValues = PropertyValue.findAll(By(PropertyValue.owner, this.id))
+  def propertyValue(prop: Property): Box[String] = {
+    def first[A](list: Seq[A]): Box[A] = list match {
+      case head::_ => Full(head)
+      case _ => Empty
+    }
+    for (pv <- first(PropertyValue.findAll(By(PropertyValue.property, prop.id), By(PropertyValue.owner, this.id))))
+      yield pv.format
+  }
+                                           
+  def setPropertyValue(prop: Property, value: String): Unit = {
+    //TODO
+  }
   def getSingleton = Size
 }
 object Size extends Size with NamedMetaMapper[Size] {
@@ -101,6 +113,14 @@ class PropertyValue extends MyMapper[PropertyValue] {
   object valStr extends MappedString(this, 1000)
   object valInt extends MappedLong(this)
   //object valDeci extends MappedDecimal(this)
+  
+  def format: String = property.obj.open_!.dataType.is match {
+    case PropertyType.String => valStr.is
+    case PropertyType.Int => valInt.is.toString
+    case PropertyType.Decimal => "a decimal"
+    case PropertyType.Date => "a date"
+    case PropertyType.Bool => "a bool"
+  }
   def getSingleton = PropertyValue
 }
 object PropertyValue extends PropertyValue with MyMetaMapper[PropertyValue] {
