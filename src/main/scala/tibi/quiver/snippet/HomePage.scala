@@ -155,9 +155,10 @@ object currentSize extends RequestVar[Box[Size]](Empty)
 
 class ModelSnip {
   val model = currentModel.is.open_!
+  val brand = model.brand.obj.open_!
   
   def header(xhtml: NodeSeq): NodeSeq = bind("model", xhtml,
-        "brand" -> model.brand.obj.open_!.name,
+        "brand" -> brand.name,
         "name" -> model.name)
   
   def properties(xhtml: NodeSeq): NodeSeq =
@@ -168,9 +169,8 @@ class ModelSnip {
     model.sizes.flatMap(size => bind("size", xhtml,
         "name" -> size.name,
         "prop_values" -> currentProductType.is.open_!.properties.flatMap(prop => {
-          val propVal = size.propertyValue(prop)
           bind("prop", chooseTemplate("size", "prop_values", xhtml),
-               "val" -> propVal.openOr(""))}),
+               "val" -> size.propertyValueFormatted(prop).openOr(""))}),
         "edit_link" -> link("size_edit", () => currentSize(Full(size)), Text("Edit")),
         "delete_link" -> link("#", () => deleteSize(size), Text("Delete"))))
   
@@ -186,14 +186,21 @@ class ModelSnip {
 class SizeSnip {
   if (!currentSize.is.isDefined) currentSize(Full(Size.create.model(currentModel.is)))
   val size = currentSize.is.open_!
+  val model = size.model.obj.open_!
+  val brand = model.brand.obj.open_!
+  val productType = model.productType.obj.open_!
+  
+  def header(xhtml: NodeSeq): NodeSeq = bind("size", xhtml,
+        "brand" -> brand.name,
+        "model" -> model.name,
+        "size" -> size.name)
   
   def edit_form(xhtml: NodeSeq): NodeSeq = bind("form", xhtml,
       "name" -> SHtml.text(size.name, size.name(_)),
-      "property_values" -> currentModel.is.open_!.productType.obj.open_!.properties.flatMap(prop => {
-        val propName = prop.name.is(lang)
-        <div><label for="{propName}">{propName}</label>{
-          SHtml.text(size.propertyValue(prop).openOr(""), size.setPropertyValue(prop, _))
-        }</div>
-      }),
-      "submit" -> SHtml.submit("Save", () => { size.save; S.redirectTo("model") }))
+      "property_values" -> productType.properties.flatMap(prop => bind("pv", chooseTemplate("form", "property_values", xhtml),
+             "label" -> prop.name.is(lang),
+        	 "value" -> SHtml.text(size.propertyValueFormatted(prop).openOr(""),
+                                   size.setPropertyValue(prop, _)))),
+      "submit" -> SHtml.submit("Save", () => { size.save; S.redirectTo("model") })
+  )
 }

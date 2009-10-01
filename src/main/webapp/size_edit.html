@@ -1,7 +1,15 @@
 <lift:surround with="default" at="content">
+  <lift:SizeSnip.header>
+    <h1><size:brand/> <size:model/> <size:size/></h1>
+  </lift:SizeSnip.header>
+
   <lift:SizeSnip.edit_form form="POST">
-    <label for="nameField">Name</label><form:name/><br/>
-    <form:property_values/>
+    <table>
+      <tr><td><label for="nameField">Name</label></td><td><form:name/></td></tr>
+      <form:property_values>
+        <tr><td><label><pv:label/></label></td><td><pv:value/></td></tr>
+      </form:property_values>
+    </table>
     <form:submit/>
   </lift:SizeSnip.edit_form>
 </lift:surround>

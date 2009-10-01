@@ -66,20 +66,24 @@ object Model extends Model with LongKeyedMetaMapper[Model] with CRUDify[Long, Mo
 }
 
 
-class Size extends NamedMapper[Size] {
+class Size extends NamedMapper[Size] with OneToMany[Long, Size]{
   object model extends MappedLongForeignKey(this, Model)
-  def propertyValues = PropertyValue.findAll(By(PropertyValue.owner, this.id))
-  def propertyValue(prop: Property): Box[String] = {
-    def first[A](list: Seq[A]): Box[A] = list match {
-      case head::_ => Full(head)
-      case _ => Empty
-    }
-    for (pv <- first(PropertyValue.findAll(By(PropertyValue.property, prop.id), By(PropertyValue.owner, this.id))))
-      yield pv.format
-  }
+  object propertyValues extends MappedOneToMany(PropertyValue, PropertyValue.owner) //TODO OrderBy
+                        with Owned[PropertyValue] with Cascade[PropertyValue]
+  
+  def propertyValue(prop: Property): Box[PropertyValue] =
+    Box(propertyValues.filter(_.property == prop).toList)
+
+  def propertyValueFormatted(prop: Property): Box[String] =
+    propertyValue(prop).map(_.format)
                                            
   def setPropertyValue(prop: Property, value: String): Unit = {
-    //TODO
+    propertyValue(prop) match {
+      case Full(pv) => pv.setValue(value).save
+      case Empty => if (!value.isEmpty)
+        propertyValues += PropertyValue.create.owner(this).property(prop).setValue(value)
+      case _ => error("shit happened while setting property value " + prop + " to " + value)
+    }
   }
   def getSingleton = Size
 }
@@ -121,6 +125,15 @@ class PropertyValue extends MyMapper[PropertyValue] {
     case PropertyType.Date => "a date"
     case PropertyType.Bool => "a bool"
   }
+  
+  def setValue(value: String) = property.obj.open_!.dataType.is match {
+	case PropertyType.String => valStr(value)
+	case PropertyType.Int => valInt(value.toInt)
+	case PropertyType.Decimal => valStr("a decimal")
+	case PropertyType.Date => valStr("a date")
+	case PropertyType.Bool => valStr("a bool")
+  }
+     
   def getSingleton = PropertyValue
 }
 object PropertyValue extends PropertyValue with MyMetaMapper[PropertyValue] {

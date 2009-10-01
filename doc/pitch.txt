@@ -1,0 +1,29 @@
+Idée de site web de matos
+
+Salut à tous,
+
+
+J’ai une idée de site web qui me trotte dans la tête ces derniers temps et j’aimerai votre avis.
+
+Les sites des fabriquants ou des shops sont pas toujours très pratiques pour chercher des informations sur les voiles ou flotteurs des années précédentes comme par exemple « quel mat passe dans une V8 de 2008 ? », ou alors « quelle voile maxi supporte une iSonic 101 ? ».  Si vous achetez comme moi votre matos d’occasion c’est généralement assez énervant de chercher toutes ces données pour trouver des mats, voiles, wishbones et flotteurs qui vont bien ensemble.
+
+L’idée serait de faire un site web qui référence tous les modèles de toutes les marques et qui permette de faire des recherches comme celles que je viens de citer.  Pour éviter qu’une seule personne n’aie à se colletiner la recherche et la saisie de toutes ces données il faudrait que le site soit modifiable par les visiteurs, un peu comme un wiki. Le problème d’un wiki c’est que les recherches se font uniquement sur le texte ; ça va pour trouver un modèle donné mais impossible de rechercher par exemple tous les wishbones de plus de 3 m.
+Je vois la naviguation (web) comme ça :
+ - choix du sport (ben oui, on cause kite et SUP ici maintenant)
+ - choix du produit : flotteur, voile, mat etc.
+ - liste des marques et formulaire de recherche
+ - si une marque est choisie :
+    * liste des modèles par année -> choix d’un modèle
+    * table des tailles avec les caractéristiques principales
+      pour le modèle choisi
+ - si la recherche est choisie : les modèles et tailles correspondants
+   sont affichés
+
+Est-ce qu’à votre avis ce serait utile un site comme ça ? Est-ce que vous le consulteriez souvent et est-ce que vous seriez prêt à passer quelques minutes à recopier les dimensions depuis un catalogue vers ce site ?  Ou alors est-ce qu’au contraire vous pensez qu’un bête fichier excel ou un wiki feraient aussi bien l’affaire ?
+
+Voilà, merci d’avoir lu jusque là ;-)  Il vous reste plus qu’à répondre pour me dire ce que vous en pensez.
+
+À+
+
+-- 
+Tibi — shaper de site web en herbe
