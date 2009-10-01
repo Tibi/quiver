@@ -45,17 +45,17 @@ object DBSetup {
   // Board properties
   val prog = create(Property, str("Program", "Programme")).dataType(PropertyType.String)
   val width = create(Property, str("Width", "Largeur")).unit("cm").dataType(PropertyType.Decimal)
-  val length = create(Property, str("Length", "Longueur")).unit("cm").dataType(PropertyType.Decimal)
-  val vol = create(Property, str("Volume", "Volume")).unit("l").dataType(PropertyType.Decimal)
+  val length = create(Property, str("Length", "Longueur")).unit("cm").dataType(PropertyType.Int)
+  val vol = create(Property, str("Volume", "Volume")).unit("l").dataType(PropertyType.Int)
   val weight = create(Property, str("Weight", "Poid")).unit("kg").dataType(PropertyType.Decimal)
   val boardProps = List(prog, width, length, vol, weight)
   boardProps foreach { _.save }
 
   // Sail properties
   val surface = create(Property, str("Surface", "Surface")).unit("m²").dataType(PropertyType.Decimal)
-  val mastLength = create(Property, str("Mast Length", "Longueur du mat")).unit("cm").dataType(PropertyType.Decimal)
-  val luffLength = create(Property, str("Luff Length", "Longueur du guindant")).unit("cm").dataType(PropertyType.Decimal)
-  val boomLength = create(Property, str("Boom Length", "Longueur au wish")).unit("cm").dataType(PropertyType.Decimal)
+  val mastLength = create(Property, str("Mast Length", "Longueur du mat")).unit("cm").dataType(PropertyType.Int)
+  val luffLength = create(Property, str("Luff Length", "Longueur du guindant")).unit("cm").dataType(PropertyType.Int)
+  val boomLength = create(Property, str("Boom Length", "Longueur au wish")).unit("cm").dataType(PropertyType.Int)
   val numBatten = create(Property, str("Number of battens", "Nombre de lattes")).unit("").dataType(PropertyType.Int)
   val numCams = create(Property, str("Number of cambers", "Nombre de cambers")).unit("").dataType(PropertyType.Int)
   val sailProps = List(surface, mastLength, luffLength, boomLength, numBatten, numCams, weight)

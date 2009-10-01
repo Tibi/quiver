@@ -13,6 +13,7 @@ trait MyMetaMapper[T <: MyMapper[T]] extends LongKeyedMetaMapper[T] {
 trait NamedMapper[T <: NamedMapper[T]] extends MyMapper[T] {
   self: T =>
   object name extends MappedString(this, 200)
+  override def toString: String = name
 }
 trait NamedMetaMapper[T <: NamedMapper[T]] extends MyMetaMapper[T] {
 	self: T with MyMetaMapper[T] =>  

@@ -172,7 +172,7 @@ class ModelSnip {
           bind("prop", chooseTemplate("size", "prop_values", xhtml),
                "val" -> size.propertyValueFormatted(prop).openOr(""))}),
         "edit_link" -> link("size_edit", () => currentSize(Full(size)), Text("Edit")),
-        "delete_link" -> link("#", () => deleteSize(size), Text("Delete"))))
+        "delete_link" -> link("model.html", () => deleteSize(size), Text("Delete"))))
   
   def add_link(xhtml: NodeSeq): NodeSeq = link("size_edit", () => currentSize(Empty), Text("Add"))
   
