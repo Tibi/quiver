@@ -1,11 +1,13 @@
 Before 1st release
  * decimal properties
+ * display units, in edit too 
+ * remove menu (or add a reasonable one)  
  * better look
- * remove menu (or add a reasonable one)
  * try uploading to stax
    - stax db config & drivers
    - sbt stax deploy task
  * edit only for logged in users
+ * google doc sheets to enter data 
  * CSV import 
 
 later

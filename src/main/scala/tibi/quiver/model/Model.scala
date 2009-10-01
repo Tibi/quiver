@@ -1,5 +1,7 @@
 package tibi.quiver.model
 
+import java.math.MathContext
+
 import scala.xml.NodeSeq
 
 import net.liftweb._ 
@@ -97,7 +99,6 @@ object PropertyType extends Enumeration {
   val String = Value("string")
   val Int = Value("integer")
   val Decimal = Value("decimal")
-  val Date =  Value("date")
   val Bool = Value("boolean")
 }
 
@@ -116,22 +117,21 @@ class PropertyValue extends MyMapper[PropertyValue] {
   object owner extends MappedLongForeignKey(this, Size)
   object valStr extends MappedString(this, 1000)
   object valInt extends MappedLong(this)
-  //object valDeci extends MappedDecimal(this)
+  object valDeci extends MappedDecimal(this, MathContext.DECIMAL32, 2)
+  object valBool extends MappedBoolean(this)
   
   def format: String = property.obj.open_!.dataType.is match {
     case PropertyType.String => valStr.is
     case PropertyType.Int => valInt.is.toString
-    case PropertyType.Decimal => "a decimal"
-    case PropertyType.Date => "a date"
-    case PropertyType.Bool => "a bool"
+    case PropertyType.Decimal => valDeci.is.toString
+    case PropertyType.Bool => if (valBool.is) "yes" else "no"
   }
   
   def setValue(value: String) = property.obj.open_!.dataType.is match {
 	case PropertyType.String => valStr(value)
 	case PropertyType.Int => valInt(value.toInt)
-	case PropertyType.Decimal => valStr("a decimal")
-	case PropertyType.Date => valStr("a date")
-	case PropertyType.Bool => valStr("a bool")
+	case PropertyType.Decimal => valDeci(BigDecimal(value))
+	case PropertyType.Bool => valBool(value startsWith "y")
   }
      
   def getSingleton = PropertyValue
