@@ -35,7 +35,9 @@ object Sport extends Sport with MNamedMetaMapper[Sport] {
 class ProductType extends MNamedMapper[ProductType] {
   object sport extends MappedLongForeignKey(this, Sport)
   def sportName = sport.obj.open_!.name
-  def properties = for (ptp <- ProductTypeProperty.findAll(By(ProductTypeProperty.productType, this.id)))
+  def properties = for (ptp <- ProductTypeProperty.findAll(
+                          By(ProductTypeProperty.productType, this.id),
+                          OrderBy(ProductTypeProperty.order, Ascending)))
     yield ptp.property.obj.open_!
   def getSingleton = ProductType
 }
@@ -120,14 +122,16 @@ class PropertyValue extends MyMapper[PropertyValue] {
   object valDeci extends MappedDecimal(this, MathContext.DECIMAL32, 2)
   object valBool extends MappedBoolean(this)
   
-  def format: String = property.obj.open_!.dataType.is match {
+  def dataType = property.obj.open_!.dataType.is
+  
+  def format: String = dataType match {
     case PropertyType.String => valStr.is
     case PropertyType.Int => valInt.is.toString
     case PropertyType.Decimal => valDeci.is.toString
     case PropertyType.Bool => if (valBool.is) "yes" else "no"
   }
   
-  def setValue(value: String) = property.obj.open_!.dataType.is match {
+  def setValue(value: String) = dataType match {
 	case PropertyType.String => valStr(value)
 	case PropertyType.Int => valInt(value.toInt)
 	case PropertyType.Decimal => valDeci(BigDecimal(value))

@@ -195,12 +195,23 @@ class SizeSnip {
         "model" -> model.name,
         "size" -> size.name)
   
+  private def field(prop: Property, size: Size) = {
+    val propVal = size.propertyValue(prop)
+    prop.dataType match {
+      case PropertyType.String | PropertyType.Int | PropertyType.Decimal =>
+        SHtml.text(size.propertyValueFormatted(prop).openOr(""), size.setPropertyValue(prop, _))
+      case PropertyType.Bool => SHtml.checkbox(propVal.isDefined && propVal.open_!.valBool,
+        (v: Boolean) => size.setPropertyValue(prop, if (v) "y" else "n"))
+    }
+  }
+  
   def edit_form(xhtml: NodeSeq): NodeSeq = bind("form", xhtml,
       "name" -> SHtml.text(size.name, size.name(_)),
-      "property_values" -> productType.properties.flatMap(prop => bind("pv", chooseTemplate("form", "property_values", xhtml),
-             "label" -> prop.name.is(lang),
-        	 "value" -> SHtml.text(size.propertyValueFormatted(prop).openOr(""),
-                                   size.setPropertyValue(prop, _)))),
+      "property_values" -> productType.properties.flatMap(prop => bind("pv",
+          chooseTemplate("form", "property_values", xhtml),
+          "label" -> prop.name.is(lang),
+    	  "value" -> field(prop, size),  //TODO use -%>
+          "unit" -> prop.unit.is) ),
       "submit" -> SHtml.submit("Save", () => { size.save; S.redirectTo("model") })
   )
 }

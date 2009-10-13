@@ -1,15 +1,24 @@
 <lift:surround with="default" at="content">
+    
+    <head>
+        <style>
+            
+            .form_label { text-align: right;}
+            .unit { text-align: left; }
+          
+        </style>
+    </head>
+    
   <lift:SizeSnip.header>
     <h1><size:brand/> <size:model/> <size:size/></h1>
   </lift:SizeSnip.header>
-
   <lift:SizeSnip.edit_form form="POST">
-    <table>
-      <tr><td><label for="nameField">Name</label></td><td><form:name/></td></tr>
+    <label for="nameField" class="column span-4 form_label">Name</label><form:name/>
+    <br/>
       <form:property_values>
-        <tr><td><label><pv:label/></label></td><td><pv:value/></td></tr>
+        <label class="column span-4 form_label"><pv:label/></label><pv:value class="column span-4 form_text"/><pv:unit class="column span-4 unit"/>
+        <br/>
       </form:property_values>
-    </table>
     <form:submit/>
   </lift:SizeSnip.edit_form>
 </lift:surround>

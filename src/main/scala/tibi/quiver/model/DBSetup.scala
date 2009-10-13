@@ -53,12 +53,16 @@ object DBSetup {
 
   // Sail properties
   val surface = create(Property, str("Surface", "Surface")).unit("m²").dataType(PropertyType.Decimal)
-  val mastLength = create(Property, str("Mast Length", "Longueur du mat")).unit("cm").dataType(PropertyType.Int)
+  val mastLength = create(Property, str("Mast", "Mât")).unit("cm").dataType(PropertyType.Int)
+  val altMast = create(Property, str("Alternative Mast", "Mât alternatif")).unit("cm").dataType(PropertyType.Int)
   val luffLength = create(Property, str("Luff Length", "Longueur du guindant")).unit("cm").dataType(PropertyType.Int)
+  //val baseLength = create(Property, str("Base Length", "Longueur de rallonge de pied de mât")).unit("cm").dataType(PropertyType.Int)
+  //val headLength = create(Property, str("Extended Head Length", "Longueur de rallonge en tête")).unit("cm").dataType(PropertyType.Int)
+  val headVario_? = create(Property, str("Vario Head?", "Têtière reglable?")).dataType(PropertyType.Bool)
   val boomLength = create(Property, str("Boom Length", "Longueur au wish")).unit("cm").dataType(PropertyType.Int)
   val numBatten = create(Property, str("Number of battens", "Nombre de lattes")).unit("").dataType(PropertyType.Int)
   val numCams = create(Property, str("Number of cambers", "Nombre de cambers")).unit("").dataType(PropertyType.Int)
-  val sailProps = List(surface, mastLength, luffLength, boomLength, numBatten, numCams, weight)
+  val sailProps = List(surface, mastLength, luffLength, headVario_?, boomLength, numBatten, numCams, weight)
   sailProps foreach { _.save }
 
     if (board.id == -1) { // TODO allow adding new props

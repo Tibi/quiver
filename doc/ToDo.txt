@@ -1,15 +1,19 @@
+http://www.pivotaltracker.com/projects/33391
+
 Before 1st release
  * decimal properties
- * display units, in edit too 
- * remove menu (or add a reasonable one)  
+ * display units, in edit too
+ * add creation & last modification dates and users
+ * remove menu and add a reasonable one
  * better look
  * try uploading to stax
    - stax db config & drivers
    - sbt stax deploy task
  * edit only for logged in users
- * google doc sheets to enter data 
- * CSV import 
+ * google doc sheets to enter data
+ * CSV import
 
 later
  * I18n
  * properties on model
+ * enum properties: instead, propose existing values in a combobox, only for String (and MString) properties marked as enum 
