@@ -30,11 +30,11 @@ class Boot {
 
     // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::
-                  Menu(Loc("Brands", List("brands"), "Brands"), Brand.menus:_*)::
+    			  Menu(Loc("Sport", List("sport"), "Sport"))::
+                  Menu(Loc("Brand", List("brand_models"), "Brand"), Brand.menus:_*)::
                   Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
-                  Menu(Loc("Product Types", List("product_types"), "Product Types"))::
+                  Menu(Loc("Product Type", List("product_type"), "Product Type"))::
                   Property.menus:::
-                  Menu(Loc("Models", List("models"), "Models"))::
                   Menu(Loc("Model", List("model"), "Model"))::
                   Menu(Loc("Model edit", List("model_edit"), "Edit Model"))::
                   Menu(Loc("Size edit", List("size_edit"), "Edit Size"))::

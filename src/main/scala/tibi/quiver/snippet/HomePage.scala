@@ -33,7 +33,7 @@ class Sports {
   def list(xhtml: NodeSeq): NodeSeq = Sport.findAll.flatMap(
     sport => bind("sport", xhtml, "name" -> sport.name,
                   //TODO use sitemap to get links
-                  "name_and_link" -> SHtml.link("/product_types.html",
+                  "name_and_link" -> SHtml.link("/sport.html",
                                                 () => currentSport(Full(sport)),
                                                 Text(sport.name)))
     )
@@ -41,7 +41,7 @@ class Sports {
     var name = ""
     def processNew(): Any = Sport.create.name(MString(lang.is -> name)).save
     bind("sport", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("New", processNew))
+      "submit" -> SHtml.submit("New Sport", processNew))
   }
 }
 
@@ -60,7 +60,7 @@ class ProductTypes {
 
   def list(xhtml: NodeSeq): NodeSeq = forSport.productTypes.flatMap(
     productType => bind("product_type", xhtml, "name" -> productType.name,
-                  "name_and_link" -> SHtml.link("/brands.html",
+                  "name_and_link" -> SHtml.link("/product_type.html",
                                                 () => currentProductType(Full(productType)),
                                                 Text(productType.name))))
 
@@ -68,7 +68,7 @@ class ProductTypes {
     var name = ""
     def processNew(): Any = ProductType.create.name(MString(lang.is -> name)).sport(currentSport.is).save
     bind("product_type", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("New", processNew))
+      "submit" -> SHtml.submit("New Product Type", processNew))
   }
 }
 
@@ -86,7 +86,7 @@ class Brands {
   def list(xhtml: NodeSeq): NodeSeq = Brand.findAll(
     By(Brand.mainProductType, currentProductType.is)).flatMap(
 	    brand => bind("brand", xhtml,
-                   "link" -> SHtml.link("/models.html", () => currentBrand(Full(brand)),
+                   "link" -> SHtml.link("/brand_models.html", () => currentBrand(Full(brand)),
                                         brand.logo.obj match {
                      case Full(img) => <img src={"imageSrv/"+img.id.is}/>
                      case _ => Text(brand.name.is)
@@ -147,7 +147,7 @@ class Models {
     var name = ""
     def processNew(): Any = Model.create.name(name).brand(forBrand).productType(forProductType).save
     bind("model", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("New", processNew))
+    					 "submit" -> SHtml.submit("New", processNew))
   }
 }
 
@@ -163,7 +163,7 @@ class ModelSnip {
   
   def properties(xhtml: NodeSeq): NodeSeq =
     currentProductType.is.open_!.properties.flatMap(
-    		prop => bind("prop", xhtml, "name" -> Text(prop.name)))
+    		prop => bind("prop", xhtml, "name" -> Text(prop.name), "unit" -> prop.unit))
   
   def sizes(xhtml: NodeSeq): NodeSeq =
     model.sizes.flatMap(size => bind("size", xhtml,
@@ -174,7 +174,8 @@ class ModelSnip {
         "edit_link" -> link("size_edit", () => currentSize(Full(size)), Text("Edit")),
         "delete_link" -> link("model.html", () => deleteSize(size), Text("Delete"))))
   
-  def new_link(xhtml: NodeSeq): NodeSeq = link("size_edit", () => currentSize(Empty), Text("New"))
+  def new_link(xhtml: NodeSeq): NodeSeq =
+    link("size_edit", () => currentSize(Empty), Text("New Size"))
   
   private def deleteSize(size: Size) {
     if (size.delete_!) S.notice("size "+size+" deleted")
