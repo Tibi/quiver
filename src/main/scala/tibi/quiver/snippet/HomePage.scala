@@ -37,11 +37,11 @@ class Sports {
                                                 () => currentSport(Full(sport)),
                                                 Text(sport.name)))
     )
-  def add(xhtml: NodeSeq): NodeSeq = {
+  def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = Sport.create.name(MString(lang.is -> name)).save
+    def processNew(): Any = Sport.create.name(MString(lang.is -> name)).save
     bind("sport", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("Add", processAdd))
+      "submit" -> SHtml.submit("New", processNew))
   }
 }
 
@@ -64,11 +64,11 @@ class ProductTypes {
                                                 () => currentProductType(Full(productType)),
                                                 Text(productType.name))))
 
-  def add(xhtml: NodeSeq): NodeSeq = {
+  def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = ProductType.create.name(MString(lang.is -> name)).sport(currentSport.is).save
+    def processNew(): Any = ProductType.create.name(MString(lang.is -> name)).sport(currentSport.is).save
     bind("product_type", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("Add", processAdd))
+      "submit" -> SHtml.submit("New", processNew))
   }
 }
 
@@ -92,11 +92,11 @@ class Brands {
                      case _ => Text(brand.name.is)
   })))
   
-  def add(xhtml: NodeSeq): NodeSeq = {
+  def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = Brand.create.name(name).mainProductType(currentProductType.is).save
+    def processNew(): Any = Brand.create.name(name).mainProductType(currentProductType.is).save
     bind("brand", xhtml, "name" -> SHtml.text(name, name = _),
-                         "submit" -> SHtml.submit("Add", processAdd))
+                         "submit" -> SHtml.submit("New", processNew))
   }
   
   private object uploaded extends RequestVar[Box[FileParamHolder]](Empty) 
@@ -143,11 +143,11 @@ class Models {
                   "name_and_link" -> SHtml.link("/model.html",
                                                 () => currentModel(Full(model)),
                                                 Text(model.name.is))))
-  def add(xhtml: NodeSeq): NodeSeq = {
+  def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
-    def processAdd(): Any = Model.create.name(name).brand(forBrand).productType(forProductType).save
+    def processNew(): Any = Model.create.name(name).brand(forBrand).productType(forProductType).save
     bind("model", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("Add", processAdd))
+      "submit" -> SHtml.submit("New", processNew))
   }
 }
 
@@ -174,7 +174,7 @@ class ModelSnip {
         "edit_link" -> link("size_edit", () => currentSize(Full(size)), Text("Edit")),
         "delete_link" -> link("model.html", () => deleteSize(size), Text("Delete"))))
   
-  def add_link(xhtml: NodeSeq): NodeSeq = link("size_edit", () => currentSize(Empty), Text("Add"))
+  def new_link(xhtml: NodeSeq): NodeSeq = link("size_edit", () => currentSize(Empty), Text("New"))
   
   private def deleteSize(size: Size) {
     if (size.delete_!) S.notice("size "+size+" deleted")
@@ -184,7 +184,10 @@ class ModelSnip {
 
 
 class SizeSnip {
-  if (!currentSize.is.isDefined) currentSize(Full(Size.create.model(currentModel.is)))
+  // Creates a new Size if none is set: New was clicked, not Edit
+  if (!currentSize.is.isDefined)
+    currentSize(Full(Size.create.model(currentModel.is)))
+  // FIXME all those open_! are bad!!
   val size = currentSize.is.open_!
   val model = size.model.obj.open_!
   val brand = model.brand.obj.open_!
