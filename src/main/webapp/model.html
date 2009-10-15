@@ -1,14 +1,18 @@
 <lift:surround with="default" at="content">
  
+
+ 
   <lift:ModelSnip.header>
     <h1><model:brand/> <model:name/></h1>
   </lift:ModelSnip.header>
   
-  <table>
+  
+  <lift:ModelSnip.tableSorter/>
+  <table id="size-table" class="tablesorter">
     <thead><tr>
-        <td>Size</td>
-        <lift:ModelSnip.properties><td><prop:name/></td></lift:ModelSnip.properties>
-        <td>Action</td>
+        <th>Size</th>
+        <lift:ModelSnip.properties><th><prop:name/></th></lift:ModelSnip.properties>
+        <th>Action</th>
     </tr></thead>
     <tbody>
       <lift:ModelSnip.sizes><tr>

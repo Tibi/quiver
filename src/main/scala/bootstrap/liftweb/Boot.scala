@@ -6,6 +6,8 @@ import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
 import _root_.net.liftweb.mapper.{DB, ConnectionManager, Schemifier, DefaultConnectionIdentifier, ConnectionIdentifier}
 import _root_.java.sql.{Connection, DriverManager}
+import net.liftweb.widgets.tablesorter.TableSorter
+
 import _root_.tibi.quiver.model._
 
 import tibi.quiver.view.ImageServer
@@ -41,6 +43,8 @@ class Boot {
                   User.sitemap:::
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
+    
+    TableSorter.init
     
     // Adds our image server to the request processing chain.
     LiftRules.dispatch.append(ImageServer.matcher)

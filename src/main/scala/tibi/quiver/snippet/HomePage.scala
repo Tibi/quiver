@@ -177,6 +177,11 @@ class ModelSnip {
   def new_link(xhtml: NodeSeq): NodeSeq =
     link("size_edit", () => currentSize(Empty), Text("New Size"))
   
+  def tableSorter(xhtml: NodeSeq): NodeSeq = {
+    import net.liftweb.widgets.tablesorter.TableSorter
+    TableSorter("#size-table")
+  }
+  
   private def deleteSize(size: Size) {
     if (size.delete_!) S.notice("size "+size+" deleted")
     else S.error("impossible to delete "+size)

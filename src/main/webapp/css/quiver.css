@@ -1,9 +1,22 @@
+/*
 body {
   background: url(../images/bg.png) left top repeat-x
 }
+*/
 
 .logo {
   font-size: 5em
 }
+
+.logo a:link {
+  text-decoration: none;
+}
+.logo a:visited {
+  text-decoration: none;
+}
+.logo a:hover {
+  text-decoration: none;
+}
+	
 
 //.container { background: white }
