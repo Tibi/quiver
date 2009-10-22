@@ -4,3 +4,6 @@ project/boot
 .*\.log
 .manager
 ^db
+stax
+out
+.idea
