@@ -32,16 +32,37 @@ object MultiString {
   object MString {
     def apply(pairs: Pair[Lang, String]*) = new MString(Map(pairs: _*))
   }
-  
 
+  /**
+   * A Lift mapper field holding a MString.
+   */
   class MappedMString[T <: Mapper[T]] (val fieldOwner: T, maxLen: Int)
   	  extends MappedField[MString, T] {
-	
-  	def this(fieldOwner: T, value: MString, maxLen: Int) {
-	  this(fieldOwner, maxLen)
-	  setAll(value)
-	}
-    //TODO make sure there’s no ¦ in the string!
+
+    def this(fieldOwner: T, value: MString, maxLen: Int) {
+      this(fieldOwner, maxLen)
+      setAll(value)
+    }
+
+    // "enIn English¦deauf Deutsch¦" <--> MString("en" -> "in English", "de" -> "auf Deutsch")
+    def toStr = (for ((lang, str) <- is.map) yield
+      if (str contains '¦') throw new IllegalArgumentException("Can’t save MString because it contains ¦ in language "
+                                                               + lang + ": " + str)
+      else lang.toString + str + "¦") reduceLeft (_+_)
+    def fromStr(str: String): MString = {
+      val seq = for (one <- str split '¦')
+    	  yield (one take 2).toString -> (one drop 2).toString
+      MString(seq :_*)
+    }
+
+    /**
+     * A criterion to use in findAll to match a string in a given language.
+     */  //def apply[O <: Mapper[O]](field: MappedField[String, O], value: String) =
+    //def criterion(str: String, lang: Lang) =
+  //Cmp[T, String](this, OprEnum.Like, Full("%"+lang.toString+str+"¦%"), Empty, Empty) // Like(this, "%"+lang.toString+str+"¦%")
+    
+    // The rest is mostly boilerplate copied from MappedString
+
     def defaultValue = new MString(new EmptyMap[Lang, String])
     def dbFieldClass = classOf[MString]
     
@@ -81,14 +102,6 @@ object MultiString {
 
     //TODO what should we do here?
     def setAll(in: MString) = set(in)
-    
-    // "en=in English¦de=auf Deutsch" <--> MString("en" -> "in English", "de" -> "auf Deutsch")
-    def toStr = (for ((lang, str) <- is.map) yield lang.toString + "=" + str) reduceLeft (_+"¦"+_)
-    def fromStr(str: String): MString = {
-      val seq = for (one <- str split "¦"; eqPos = one indexOf '=')
-    	  yield (if (eqPos > 0) one take eqPos else DefaultLang).toString -> (one drop eqPos+1).toString
-      MString(seq :_*)
-    }
     
     def targetSQLType = java.sql.Types.VARCHAR
     def jdbcFriendly(field: String) = toStr

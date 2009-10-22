@@ -4,11 +4,15 @@
   </lift:Models.header>
   
   <lift:Models.list>
-    <div class="model"><model:name_and_link/></div>
+    <div class="model"><model:name_and_link/>&nbsp;<model:delete_link/></div>
   </lift:Models.list>
   
   <lift:Models.new_one form="POST">
     <model:name/><model:submit/>
   </lift:Models.new_one>
+
+  <lift:CsvImport.form form="POST" multipart="true">
+      <form:file_upload/><form:submit/>
+  </lift:CsvImport.form>
 </lift:surround>
 

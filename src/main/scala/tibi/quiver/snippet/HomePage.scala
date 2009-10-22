@@ -106,7 +106,7 @@ class Brands {
       case Full(b) => b
       case _ => throw new RuntimeException("editing no brand")
     }
-    def save(): Any = {
+    def save(): Unit = {
       val image = brand.logo.obj openOr Image.create
       uploaded.is.map(fileParam => image.data(fileParam.file))
       ImageServer.save(image)
@@ -142,7 +142,8 @@ class Models {
     model => bind("model", xhtml, "name" -> model.name.is,
                   "name_and_link" -> SHtml.link("/model.html",
                                                 () => currentModel(Full(model)),
-                                                Text(model.name.is))))
+                                                Text(model.name.is)),
+                   "delete_link" -> link("brand_models", () => model.delete_!, Text("Delete"))))
   def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processNew(): Any = Model.create.name(name).brand(forBrand).productType(forProductType).save
@@ -223,4 +224,19 @@ class SizeSnip {
           "unit" -> prop.unit.is) ),
       "submit" -> SHtml.submit("Save", () => { size.save; S.redirectTo("model") })
   )
+}
+
+
+class CsvImport {
+
+  private object uploaded extends RequestVar[Box[FileParamHolder]](Empty)
+
+  def form(xhtml: NodeSeq): NodeSeq = bind("form", xhtml,
+    "file_upload" -> fileUpload(upl => uploaded(Full(upl))),
+    "submit" -> SHtml.submit("Import", save))
+
+  def save(): Unit = {
+    for (fileParam <- uploaded.is; pt <- currentProductType.is; brand <- currentBrand.is)
+      (new CsvImporter(new java.io.InputStreamReader(fileParam.fileStream), lang.is, pt, brand)).errors foreach { S.error(_) }
+  }
 }

@@ -14,6 +14,7 @@ class MyProject(info: ProjectInfo) extends DefaultWebProject(info) //with AutoCo
   val servlet = "javax.servlet" % "servlet-api" % "2.5" % "provided"
   val junit = "junit" % "junit" % "3.8.1" % "test"
   val h2 = "com.h2database" % "h2" % "1.1.117" % "test"
+  val csv = "net.sf.opencsv" % "opencsv" % "2.0"
 
   // required because Ivy doesn't pull repositories from poms
   val smackRepo = "m2-repository-smack" at "http://maven.reucon.com/public"

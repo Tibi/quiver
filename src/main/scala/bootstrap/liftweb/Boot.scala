@@ -28,7 +28,7 @@ class Boot {
     // Model classes to map to the database
     Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model, Size,
                         Property, PropertyValue, ProductTypeProperty)
-    DBSetup.setup
+    DbSetup.setup
 
     // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::

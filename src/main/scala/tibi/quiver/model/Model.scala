@@ -35,10 +35,10 @@ object Sport extends Sport with MNamedMetaMapper[Sport] {
 class ProductType extends MNamedMapper[ProductType] {
   object sport extends MappedLongForeignKey(this, Sport)
   def sportName = sport.obj.open_!.name
-  def properties = for (ptp <- ProductTypeProperty.findAll(
+  lazy val properties = fetchProperties
+  def fetchProperties = ProductTypeProperty.findAll(
                           By(ProductTypeProperty.productType, this.id),
-                          OrderBy(ProductTypeProperty.order, Ascending)))
-    yield ptp.property.obj.open_!
+                          OrderBy(ProductTypeProperty.order, Ascending)).map(_.property.obj.open_!)
   def getSingleton = ProductType
 }
 object ProductType extends ProductType with MNamedMetaMapper[ProductType] {
@@ -83,8 +83,8 @@ class Size extends NamedMapper[Size] with OneToMany[Long, Size]{
                                            
   def setPropertyValue(prop: Property, value: String): Unit = {
     propertyValue(prop) match {
-      case Full(pv) => pv.setValue(value).save
-      case Empty => if (!value.isEmpty)
+      case Full(pv) => if (value == "") pv.delete_! else pv.setValue(value).save
+      case Empty => if (value != "")
         propertyValues += PropertyValue.create.owner(this).property(prop).setValue(value)
       case _ => error("shit happened while setting property value " + prop + " to " + value)
     }
@@ -117,6 +117,7 @@ object Property extends Property with MNamedMetaMapper[Property] with CRUDify[Lo
 class PropertyValue extends MyMapper[PropertyValue] {
   object property extends MappedLongForeignKey(this, Property)
   object owner extends MappedLongForeignKey(this, Size)
+  // The value fields, only one is filled.
   object valStr extends MappedString(this, 1000)
   object valInt extends MappedLong(this)
   object valDeci extends MappedDecimal(this, MathContext.DECIMAL32, 2)
@@ -132,10 +133,10 @@ class PropertyValue extends MyMapper[PropertyValue] {
   }
   
   def setValue(value: String) = dataType match {
-	case PropertyType.String => valStr(value)
-	case PropertyType.Int => valInt(value.toInt)
-	case PropertyType.Decimal => valDeci(BigDecimal(value))
-	case PropertyType.Bool => valBool(value startsWith "y")
+    case PropertyType.String => valStr(value)
+    case PropertyType.Int => valInt(value.toInt)
+    case PropertyType.Decimal => valDeci(BigDecimal(value))
+    case PropertyType.Bool => valBool(value startsWith "y")
   }
      
   def getSingleton = PropertyValue
