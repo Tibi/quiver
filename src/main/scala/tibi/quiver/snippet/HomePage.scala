@@ -35,8 +35,10 @@ class Sports {
                   //TODO use sitemap to get links
                   "name_and_link" -> SHtml.link("/sport.html",
                                                 () => currentSport(Full(sport)),
-                                                Text(sport.name)))
+                                                Text(sport.name),
+                                                ("class", "sport"))
     )
+  )
   def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processNew(): Any = Sport.create.name(MString(lang.is -> name)).save
@@ -62,7 +64,10 @@ class ProductTypes {
     productType => bind("product_type", xhtml, "name" -> productType.name,
                   "name_and_link" -> SHtml.link("/product_type.html",
                                                 () => currentProductType(Full(productType)),
-                                                Text(productType.name))))
+                                                Text(productType.name),
+                  								("class", "product_type"))
+    )
+  )
 
   def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
@@ -83,14 +88,16 @@ class Brands {
     case _ => Text("")
   }
   
-  def list(xhtml: NodeSeq): NodeSeq = Brand.findAll(
-    By(Brand.mainProductType, currentProductType.is)).flatMap(
+  def list(xhtml: NodeSeq): NodeSeq = Brand.findAll(By(Brand.mainProductType, currentProductType.is)
+  ).flatMap(
 	    brand => bind("brand", xhtml,
                    "link" -> SHtml.link("/brand_models.html", () => currentBrand(Full(brand)),
                                         brand.logo.obj match {
-                     case Full(img) => <img src={"imageSrv/"+img.id.is}/>
-                     case _ => Text(brand.name.is)
-  })))
+					                      case Full(img) => <img src={"imageSrv/"+img.id.is}/>
+					                      case _ => Text(brand.name.is)
+                   						}, ("class", "brand"))
+	    		 )
+  )
   
   def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
@@ -142,7 +149,7 @@ class Models {
     model => bind("model", xhtml, "name" -> model.name.is,
                   "name_and_link" -> SHtml.link("/model.html",
                                                 () => currentModel(Full(model)),
-                                                Text(model.name.is)),
+                                                Text(model.name.is), ("class", "model")),
                    "delete_link" -> link("brand_models", () => model.delete_!, Text("Delete"))))
   def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
@@ -216,7 +223,8 @@ class SizeSnip {
   }
   
   def edit_form(xhtml: NodeSeq): NodeSeq = bind("form", xhtml,
-      "name" -> SHtml.text(size.name, size.name(_)),
+      "name" -> size.name.toForm,
+      "year" -> size.year.toForm,
       "property_values" -> productType.properties.flatMap(prop => bind("pv",
           chooseTemplate("form", "property_values", xhtml),
           "label" -> prop.name.is(lang),

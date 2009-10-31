@@ -5,21 +5,36 @@ body {
 */
 
 .logo {
-  font-size: 5em
+  font-size: 5em;
 }
 
-.logo a:link {
-  text-decoration: none;
-  color: #126D7C;
-}
-.logo a:visited {
-  text-decoration: none;
-  color: #126D7C;
-}
-.logo a:hover {
+div.logo a:link,a:visited,a:hover,a:active {
   text-decoration: none;
   color: #126D7C;
 }
 	
+a.sport:link,a.sport:visited,a.sport:hover,a.sport:active {
+	font-size: 2em;
+	text-decoration: none;
+	color: #000099;
+}
+
+a.product_type:link,a.product_type:visited,a.product_type:hover,a.product_type:active {
+    font-size: 2em;
+    text-decoration: none;
+    color: #003399;
+}
+
+a.brand:link,a.brand:visited,a.brand:hover,a.brand:active {
+    font-size: 2em;
+    text-decoration: none;
+    color: #003399;
+}
+
+a.model:link,a.model:visited,a.model:hover,a.model:active {
+    font-size: 2em;
+    text-decoration: none;
+    color: #003399;
+}
 
 //.container { background: white }

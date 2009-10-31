@@ -5,23 +5,29 @@ Done
  * display units, in edit too OK
  * CSV import  
 
+Tech
+ * use util.BindPlus,
+ * try to chain binds,
+ * try mapper.view (http://tinyurl.com/ykxpn2t)
+
 Before 1st release
- * add rewrite rules to have nice urls http://quiver/brand/NP/model/V8
+ * Year!!
+ * better look
+ * edit only for logged in users (except in test mode)
+ * google doc sheets to enter data            
+ * try uploading to stax
+   - stax db config & drivers
+   - sbt stax deploy task
+ * add rewrite rules to have nice urls http://quiver/brand/NP/model/V8  doc http://bit.ly/423KQp
  * brand and model names should always be links to ↑
  * add creation & last modification dates and users
  * remove menu and add a reasonable one
  * test TableEditor from net.liftweb.mapper.view.snippet
- * better look
- * try uploading to stax
-   - stax db config & drivers
-   - sbt stax deploy task
- * edit only for logged in users
- * google doc sheets to enter data
 
  * replace Sport with Category
  
   
 later
- * I18n
+ * I18n: local calculator and prop files http://tinyurl.com/ylgqltz
  * properties on model
  * enum properties: instead, propose existing values in a combobox, only for String (and MString) properties marked as enum 

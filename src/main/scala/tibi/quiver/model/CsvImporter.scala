@@ -18,6 +18,7 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
   // Infos aboat the size currently being built
   var sizeName: Box[String] = Empty
   var model: Box[Model] = Empty
+  var year: Box[Int] = Empty
   val propVals: MutMap[Property, String] = MutMap()
   def resetSizeInfos = { sizeName = Empty; model = Empty; propVals.clear }
 
@@ -32,11 +33,12 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
 
   def process {
     val csv = new CSVReader(reader, ';')  //TODO guess the separator?
-    var hasName, hasModel = false
+    var hasName, hasModel, hasYear = false
     // Reads the header into a list of functions to handle each cell
     val funcs: Seq[(String) => Unit] = for (head <- csv.readNext) yield head match {
       case "Model" => hasModel = true; handleModel _
       case "Name" => hasName = true; (x: String) => sizeName = Full(x)
+      case "Year" => hasYear = true; (x: String) => year = Full(x.toInt)
       case "" | null => doNothing _
       case propName: String => findProperty(propName) match {
         case Full(prop) => propVals(prop) = _
@@ -45,15 +47,21 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
     }
     if (!hasName) errors += "CSV file has no name column."
     if (!hasModel) errors += "CSV file has no model column."
-    if (!hasName || !hasModel) return
+    if (!hasYear) errors += "CSV file has no Year column."
+    if (!hasName || !hasModel || !hasYear) return
     
     // Read the other lines and apply the functions for each.
     for (line <- convertList(csv.readAll)) {  // can’t iterate over java lists???
       resetSizeInfos
       zipApply(funcs.toList, line.toList)
-      for (sizeNam <- sizeName; modl <- model) {
-        // Creates the size only if a size name and a model are defined.
-        val size = Size.create.name(sizeNam).model(modl)
+      // Edit the size only if a size name, a model and a year are defined.
+      for (sizeNam <- sizeName; modl <- model; yer <- year) {
+        val size = Size.findAll(By(Size.model, modl), By(Size.name, sizeNam)) match {
+          case List(siz) => siz
+          case List(siz, _) => errors += "Several sizes named " + sizeNam + " for model " + modl.name; siz
+          case Nil => Size.create.name(sizeNam).model(modl)
+        }
+        size.year(yer)
         for ((prop, valStr) <- propVals) {
           size.setPropertyValue(prop, valStr)    
         }
@@ -61,6 +69,7 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
       }
     }
   }
+
 
   /**
    * Given a list of functions and a list of elements, returns the functions applied to the elements.

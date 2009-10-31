@@ -74,7 +74,8 @@ class Size extends NamedMapper[Size] with OneToMany[Long, Size]{
   object model extends MappedLongForeignKey(this, Model)
   object propertyValues extends MappedOneToMany(PropertyValue, PropertyValue.owner) //TODO OrderBy
                         with Owned[PropertyValue] with Cascade[PropertyValue]
-  
+  object year extends MappedInt(this)
+
   def propertyValue(prop: Property): Box[PropertyValue] =
     Box(propertyValues.filter(_.property == prop).toList)
 
