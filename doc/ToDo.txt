@@ -11,7 +11,7 @@ Tech
  * try mapper.view (http://tinyurl.com/ykxpn2t)
 
 Before 1st release
- * Year!!
+ * Year: only year or first and last or all 3?
  * better look
  * edit only for logged in users (except in test mode)
  * google doc sheets to enter data            
