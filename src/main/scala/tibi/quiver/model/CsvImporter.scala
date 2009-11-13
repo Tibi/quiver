@@ -13,25 +13,34 @@ import MultiString._
 
 //TODO what about years?
 
+/**
+ * Imports the sizes from reader for the given product type and brand.
+ * 
+ * Each line represents a size in csv format, the separator must be ;
+ * The first line is a header with property names in the given language + columns called
+ * "Model", "Name" (of the size) and "Year" must be present.
+ * If the header has an error, nothing is imported.
+ * Errors during import are collected in the "errors" attribute.
+ */
 class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val brand: Brand) {
-  
-  // Infos aboat the size currently being built
-  var sizeName: Box[String] = Empty
-  var model: Box[Model] = Empty
-  var year: Box[Int] = Empty
-  val propVals: MutMap[Property, String] = MutMap()
-  def resetSizeInfos = { sizeName = Empty; model = Empty; propVals.clear }
-
-  /** Empty if the import was successful, else contains error messages. */
+ 
+  /** Error messages, empty if the import was successful. */
   val errors = new ListBuffer[String]
+  
+  // Infos about the size currently being built
+  private var sizeName: Box[String] = Empty
+  private var model: Box[Model] = Empty
+  private var year: Box[Int] = Empty
+  private val propVals: MutMap[Property, String] = MutMap()
+  private def resetSizeInfos() { sizeName = Empty; model = Empty; propVals.clear }
 
   // A cache of known models
-  val models: MutMap[String, Model]  = MutMap()
+  private val models: MutMap[String, Model]  = MutMap()
 
   // Starts the import right in the constructor.
-  process
+  process()
 
-  def process {
+  def process() {
     val csv = new CSVReader(reader, ';')  //TODO guess the separator?
     var hasName, hasModel, hasYear = false
     // Reads the header into a list of functions to handle each cell
@@ -45,14 +54,14 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
         case other => errors += ("Unknown property or column: " + other); doNothing _ 
       }
     }
-    if (!hasName) errors += "CSV file has no name column."
+    if (!hasName)  errors += "CSV file has no name column."
     if (!hasModel) errors += "CSV file has no model column."
-    if (!hasYear) errors += "CSV file has no Year column."
+    if (!hasYear)  errors += "CSV file has no Year column."
     if (!hasName || !hasModel || !hasYear) return
     
     // Read the other lines and apply the functions for each.
-    for (line <- convertList(csv.readAll)) {  // can’t iterate over java lists???
-      resetSizeInfos
+    for (line <- convertList(csv.readAll)) {  // have to convert from java list
+      resetSizeInfos()
       zipApply(funcs.toList, line.toList)
       // Edit the size only if a size name, a model and a year are defined.
       for (sizeNam <- sizeName; modl <- model; yer <- year) {
@@ -96,11 +105,9 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
     })
   }
   
-  def findProperty(propName: String): Box[Property] = {
-    Property.findByName(propName, lang) match {
-      case List(prop) => Full(prop)
-      //case prop :: Nil => Full(prop)
-      case _ => errors += "Property not found " + propName; Empty
-    }
+  def findProperty(propName: String): Box[Property] = Property.findByName(propName, lang) match {
+    case List(prop) => Full(prop)
+    case List(_, _) => errors += "Found several properties named " + propName; Empty
+    case _ => errors += "Property not found " + propName; Empty
   }
 }

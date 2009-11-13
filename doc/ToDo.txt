@@ -4,6 +4,7 @@ Done
  * decimal properties OK
  * display units, in edit too OK
  * CSV import  
+ * brand and model names should always be links
 
 Tech
  * use util.BindPlus,
@@ -23,7 +24,6 @@ Before 1st release
  * edit only for logged in users (except in test mode)
  * google doc sheets to enter data            
  * add rewrite rules to have nice urls http://quiver/brand/NP/model/V8  doc http://bit.ly/423KQp
- * brand and model names should always be links to ↑
  * add creation & last modification dates and users
  * remove menu and add a reasonable one
  * test TableEditor from net.liftweb.mapper.view.snippet
