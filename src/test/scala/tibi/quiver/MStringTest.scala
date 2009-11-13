@@ -1,14 +1,15 @@
 package tibi.quiver
 
-import _root_.junit.framework._
-import Assert._
+import org.specs._
 
 import model.MultiString._
 
-class MStringTest extends TestCase("mstring") {
-
-  def testConstruct = {
-    val ms = MString("en" -> "in english")
-    assert(ms("en") == "in engleish")
+object MStringTest extends Specification {
+  "stored == retrieved" in {
+    val en = "in english"
+    val fr = "en français"
+    val ms = MString("en" -> en, "fr" -> fr)
+    ms("en") must_== en
+    ms("fr") must_== fr
   }
 }

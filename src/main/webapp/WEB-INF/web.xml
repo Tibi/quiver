@@ -5,6 +5,7 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+    
 <filter>
   <filter-name>LiftFilter</filter-name>
   <display-name>Lift Filter</display-name>
@@ -17,5 +18,12 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
   <filter-name>LiftFilter</filter-name>
   <url-pattern>/*</url-pattern>
 </filter-mapping>
+
+<resource-ref>
+   <description>Quiver database</description>
+   <res-ref-name>jdbc/quiver</res-ref-name>
+   <res-type>javax.sql.DataSource</res-type>
+   <res-auth>Container</res-auth>
+</resource-ref>
 
 </web-app>

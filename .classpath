@@ -20,7 +20,7 @@
 	<classpathentry kind="lib" path="lib_managed/compile/lift-core-1.1-M6.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/lift-facebook-1.1-M6.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/lift-machine-1.1-M6.jar"/>
-	<classpathentry kind="lib" path="lib_managed/compile/lift-mapper-1.1-M6.jar"/>
+	<classpathentry kind="lib" path="lib_managed/compile/lift-mapper-1.1-M6.jar" sourcepath="lib_managed/compile/lift-mapper-1.1-M6-sources.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/lift-record-1.1-M6.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/lift-textile-1.1-M6.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/lift-util-1.1-M6.jar" sourcepath="lib_managed/compile/lift-util-1.1-M6-sources.jar"/>
@@ -33,10 +33,18 @@
 	<classpathentry kind="lib" path="lib_managed/compile/smack-3.1.0.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/smackx-3.1.0.jar"/>
 	<classpathentry kind="lib" path="lib_managed/provided/servlet-api-2.5.jar"/>
-	<classpathentry kind="lib" path="lib_managed/test/jetty-6.1.14.jar"/>
-	<classpathentry kind="lib" path="lib_managed/test/jetty-util-6.1.14.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/opencsv-2.0.jar"/>
-	<classpathentry kind="lib" path="lib_managed/test/h2-1.1.117.jar"/>
-	<classpathentry kind="lib" path="lib_managed/test/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/specs-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib_managed/compile/h2-1.1.117.jar"/>
+	<classpathentry kind="lib" path="lib_managed/compile/mysql-connector-java-5.1.6.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/geronimo-spec-jta-1.0.1B-rc4.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jetty-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jetty-naming-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jetty-plus-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jetty-util-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/mail-1.4.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/scalacheck-1.5.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/servlet-api-2.5-6.1.14.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

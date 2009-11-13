@@ -20,14 +20,41 @@ class Boot {
   def boot {
     
     // Defines the database to use.
-    DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
+    Log.debug("this is a debug message")
+    
+    DefaultConnectionIdentifier.jndiName = "jdbc/quiver"
+    /*
+    import _root_.javax.naming.{Context, InitialContext}
+    import _root_.javax.sql.{DataSource}
+    val envContext = (new InitialContext).lookup("java:/comp/env").asInstanceOf[Context]
+    envContext.lookup(DefaultConnectionIdentifier.jndiName).asInstanceOf[DataSource].getConnection
+    */
+    if (!DB.jndiJdbcConnAvailable_?) {
+      Log.warn("No JNDI, using h2")
+      //DefaultConnectionIdentifier.jndiName = null
+      //exit
+      DB.defineConnectionManager(DefaultConnectionIdentifier, DbVendor)
+    }
     
     // package to search for snippets, models and views
     LiftRules.addToPackages("tibi.quiver")
     
+    // Tells Mapper to log all queries
+    DB.addLogFunc((query, time) => Log.debug(() => (query + ":" + time + "ms")))
+    /*DB.addLogFunc {
+      case (query, time) => {
+        Log.info("All queries took " + time + "ms: ")
+        query.allEntries.foreach({ case DBLogEntry(stmt, duration) =>
+          Log.info(stmt + " took " + duration + "ms")})
+        Log.info("End queries")
+      }
+    }*/
+
     // Model classes to map to the database
     Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model, Size,
                         Property, PropertyValue, ProductTypeProperty)
+
+    // Adds some basic data to our database: product types and properties
     DbSetup.setup
 
     // Builds the menu (SiteMap)
@@ -44,6 +71,7 @@ class Boot {
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
     
+    // Initializes the jquery lift widget
     TableSorter.init
     
     // Adds our image server to the request processing chain.
@@ -59,6 +87,7 @@ class Boot {
 
     LiftRules.early.append(makeUtf8)
 
+    // We want all DB calls fired during an http request in a single transaction.
     S.addAround(DB.buildLoanWrapper)
   }
 
@@ -71,13 +100,15 @@ class Boot {
 
 }
 
-
-object DBVendor extends ConnectionManager {
+/** Used only when no JNDI connection is available. */
+object DbVendor extends ConnectionManager {
 
   Class.forName("org.h2.Driver")
+  //Class.forName("com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource")
 
   def newConnection(name: ConnectionIdentifier): Box[Connection] = try {
     Full(DriverManager.getConnection("jdbc:h2:db/quiver;AUTO_SERVER=TRUE"))
+    //Full(DriverManager.getConnection("jdbc:mysql://localhost:3306/quiver", "quiver", "quiver"))
   } catch {
     case e: Exception => e.printStackTrace; Empty
   }

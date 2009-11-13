@@ -11,20 +11,24 @@ Tech
  * try mapper.view (http://tinyurl.com/ykxpn2t)
 
 Before 1st release
+ * try uploading to stax
+    http://wiki.stax.net/w/index.php/Database_Guide 
+    http://groups.google.com/group/liftweb/browse_thread/thread/9b4405b25f0a1da1 
+    http://wiki.liftweb.net/index.php/HowTo_configure_a_JNDI_data_source_for_lift_and_Jetty 
+    http://docs.codehaus.org/display/JETTY/DataSource+Examples 
+   - stax db config & drivers
+   - sbt stax deploy task: remove unused libs: h2, mysql driver, lift-textile      
  * Year: only year or first and last or all 3?
  * better look
  * edit only for logged in users (except in test mode)
  * google doc sheets to enter data            
- * try uploading to stax
-   - stax db config & drivers
-   - sbt stax deploy task
  * add rewrite rules to have nice urls http://quiver/brand/NP/model/V8  doc http://bit.ly/423KQp
  * brand and model names should always be links to ↑
  * add creation & last modification dates and users
  * remove menu and add a reasonable one
  * test TableEditor from net.liftweb.mapper.view.snippet
 
- * replace Sport with Category
+ * replace Sport with Category?
  
   
 later

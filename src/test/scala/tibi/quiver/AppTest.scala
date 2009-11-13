@@ -9,7 +9,7 @@ import _root_.net.liftweb.util._
 object AppTest {
   def suite: Test = {
     val suite = new TestSuite(classOf[AppTest])
-    suite.addTestSuite(classOf[MStringTest])
+   // suite.addTestSuite(classOf[MStringTest])
     suite
   }
 

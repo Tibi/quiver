@@ -35,6 +35,7 @@ object MultiString {
 
   /**
    * A Lift mapper field holding a MString.
+   * It can’t store the ¦ character because it is used as a delimiter.
    */
   class MappedMString[T <: Mapper[T]] (val fieldOwner: T, maxLen: Int)
   	  extends MappedField[MString, T] {
