@@ -1,14 +1,14 @@
 <lift:surround with="default" at="content">
 
-    <lift:Sports.list>  
+    <lift:Categories.list>  
       <div class="prepend-2 span-22 last">
-        <sport:name_and_link/>
+        <category:name_and_link/>
       </div>
-    </lift:Sports.list>
+    </lift:Categories.list>
   
-  <lift:Sports.new_one form="POST">
-    <sport:name/><sport:submit/>
-  </lift:Sports.new_one>
+  <lift:Categories.new_one form="POST">
+    <category:name/><category:submit/>
+  </lift:Categories.new_one>
 
 </lift:surround>
 

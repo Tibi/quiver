@@ -24,7 +24,8 @@ trait MNamedMapper[T <: MNamedMapper[T]] extends MyMapper[T] {
   object name extends MappedMString(this, 200)
 }
 trait MNamedMetaMapper[T <: MNamedMapper[T]] extends MyMetaMapper[T] {
-	self: T with MyMetaMapper[T] =>
+  self: T with MyMetaMapper[T] =>
   def findByName(nameIn: String, lang: Lang) = //findAll(name.criterion(nameIn, lang))
     findAll.filter(_.name.is(lang) == nameIn)
+ // override def fieldOrder = List(name)
 }

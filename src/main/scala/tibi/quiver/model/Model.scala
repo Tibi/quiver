@@ -22,18 +22,19 @@ class Image extends MyMapper[Image] {
 object Image extends Image with MyMetaMapper[Image] 
 
 
-class Sport extends MNamedMapper[Sport] { 
-  def productTypes = ProductType.findAll(By(ProductType.sport, this))
-  def getSingleton = Sport
+class Category extends MNamedMapper[Category]  with OneToMany[Long, Category] { 
+  object parent extends MappedLongForeignKey(this, Category)
+  object subCategories extends MappedOneToMany(Category, Category.parent) 
+                       with Owned[Category] with Cascade[Category]
+  def productTypes = ProductType.findAll(By(ProductType.category, this))
+  def getSingleton = Category
 }
-object Sport extends Sport with MNamedMetaMapper[Sport] {
-  override def fieldOrder = List(name)
-}
+object Category extends Category with MNamedMetaMapper[Category]
 
 
 class ProductType extends MNamedMapper[ProductType] {
-  object sport extends MappedLongForeignKey(this, Sport)
-  def sportName = sport.obj.open_!.name
+  object category extends MappedLongForeignKey(this, Category)
+  def categoryName = category.obj.open_!.name
   lazy val properties = fetchProperties
   def fetchProperties = ProductTypeProperty.findAll(
                           By(ProductTypeProperty.productType, this.id),
@@ -41,7 +42,7 @@ class ProductType extends MNamedMapper[ProductType] {
   def getSingleton = ProductType
 }
 object ProductType extends ProductType with MNamedMetaMapper[ProductType] {
-  override def fieldOrder = List(name, sport)
+  override def fieldOrder = List(name, category)
 }
 
 

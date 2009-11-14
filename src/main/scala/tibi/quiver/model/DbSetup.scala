@@ -41,8 +41,8 @@ object DbSetup {
   def createProp(name: MString, typ: PropertyType.PropertyType, unit: String): Property =
     saveIt(create(Property, name, false).dataType(typ).unit(unit))
 
-  def createPT(name: MString, sport: Sport): ProductType = 
-    saveIt(create(ProductType, name, false).sport(sport))
+  def createPT(name: MString, category: Category): ProductType = 
+    saveIt(create(ProductType, name, false).category(category))
   
   def associateProps2PT(pt: ProductType, props: List[Property]) {
     val existingProperties = pt.fetchProperties
@@ -57,7 +57,7 @@ object DbSetup {
    * Creates some test objects in the database. 
    */
   def setup {
-    val wind = create(Sport, str("Windsurf", "Planche à voile"))
+    val wind = create(Category, str("Windsurf", "Planche à voile"))
     val board = createPT(str("Board", "Flotteur"), wind)
     val sail = createPT(str("Sail", "Voile"), wind)
     val mast = createPT(str("Mast", "Mât"), wind)

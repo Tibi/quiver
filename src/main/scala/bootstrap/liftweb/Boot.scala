@@ -42,18 +42,18 @@ class Boot {
     LiftRules.addToPackages("tibi.quiver")
     
     // Tells Mapper to log all queries
-    DB.addLogFunc((query, time) => Log.debug(() => (query + ":" + time + "ms")))
-    /*DB.addLogFunc {
+   // DB.addLogFunc((query, time) => Log debug { query + ":" + time + "ms" })
+    DB.addLogFunc {
       case (query, time) => {
         Log.info("All queries took " + time + "ms: ")
         query.allEntries.foreach({ case DBLogEntry(stmt, duration) =>
           Log.info(stmt + " took " + duration + "ms")})
         Log.info("End queries")
       }
-    }*/
+    }
 
     // Model classes to map to the database
-    Schemifier.schemify(true, Log.infoF _, User, Image, Sport, ProductType, Brand, Model, Size,
+    Schemifier.schemify(true, Log.infoF _, User, Image, Category, ProductType, Brand, Model, Size,
                         Property, PropertyValue, ProductTypeProperty)
 
     // Adds some basic data to our database: product types and properties
@@ -61,7 +61,7 @@ class Boot {
 
     // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::
-    			  Menu(Loc("Sport", List("sport"), "Sport"))::
+    			  Menu(Loc("Category", List("category"), "Category"))::
                   Menu(Loc("Brand", List("brand_models"), "Brand"), Brand.menus:_*)::
                   Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
                   Menu(Loc("Product Type", List("product_type"), "Product Type"))::
