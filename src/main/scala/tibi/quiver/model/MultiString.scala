@@ -1,14 +1,16 @@
 package tibi.quiver.model
 
-import scala.collection.immutable.EmptyMap
-import scala.xml._
+
 import java.lang.reflect.Method
 import java.util.Date
-import net.liftweb._
-import util._
-import mapper._
-import http.SHtml
+import scala.collection.immutable.EmptyMap
+import scala.xml._
 
+import net.liftweb.common._
+import net.liftweb.util._
+import net.liftweb.mapper._
+import net.liftweb.http.SHtml
+import net.liftweb.http.js._
 
 object MultiString {
 
@@ -129,7 +131,6 @@ object MultiString {
     
     def fieldCreatorString(dbType: DriverType, colName: String): String = colName+" VARCHAR("+maxLen*4+")"
      
-    import http.js._
     def asJsExp: JsExp = JE.Str(is.toString) //TODO also convert to string?
       
     override def _toForm: Box[NodeSeq] = Full(SHtml.text(data(DefaultLang), this.setFromAny(_)))

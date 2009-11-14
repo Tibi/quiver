@@ -1,10 +1,11 @@
 package tibi.quiver
 
-import _root_.java.io.File
-import _root_.junit.framework._
+import java.io.File
+import junit.framework._
 import Assert._
-import _root_.scala.xml.XML
-import _root_.net.liftweb.util._
+import scala.xml._
+import net.liftweb.common._
+import net.liftweb.util._
 
 object AppTest {
   def suite: Test = {

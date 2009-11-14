@@ -4,8 +4,8 @@ class MyProject(info: ProjectInfo) extends DefaultWebProject(info) //with AutoCo
 {
   override def useMavenConfigurations = true
 
-  val liftVersion = "1.1-M6" // M7 has no sources for now
-  val lift = "net.liftweb" % "lift-core" % liftVersion withSources()
+  val liftVersion = "1.1-M7" // M7 has no sources for now
+  //val lift = "net.liftweb" % "lift-core" % liftVersion withSources()
   
   // The following are needed only to get sources
   val liftWeb = "net.liftweb" % "lift-webkit" % liftVersion withSources()

@@ -1,7 +1,8 @@
 package tibi.quiver.model
 
-import net.liftweb.mapper._
+import net.liftweb.common._
 import net.liftweb.util._
+import net.liftweb.mapper._
 
 import MultiString._
 

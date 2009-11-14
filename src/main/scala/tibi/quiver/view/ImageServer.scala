@@ -2,12 +2,12 @@ package tibi.quiver.view
 
 import java.util.Date
 
-import net.liftweb._ 
-import mapper._ 
-import http._ 
-import util._
-import ControlHelpers.tryo
-import TimeHelpers.{toInternetDate, parseInternetDate, now}
+import net.liftweb.common._
+import net.liftweb.mapper._ 
+import net.liftweb.http._ 
+import net.liftweb.util._
+import net.liftweb.util.ControlHelpers.tryo
+import net.liftweb.util.TimeHelpers.{toInternetDate, parseInternetDate, now}
 
 import model.Image
 

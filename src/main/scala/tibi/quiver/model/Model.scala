@@ -4,11 +4,10 @@ import java.math.MathContext
 
 import scala.xml.NodeSeq
 
-import net.liftweb._ 
-import mapper._ 
-import http._ 
-import SHtml._ 
-import util._
+import net.liftweb.common._
+import net.liftweb.util._
+import net.liftweb.mapper._ 
+import net.liftweb.http.SHtml._ 
 
 import MultiString._
 

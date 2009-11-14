@@ -1,15 +1,17 @@
 package bootstrap.liftweb
 
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.sitemap._
-import _root_.net.liftweb.sitemap.Loc._
-import _root_.net.liftweb.mapper.{DB, ConnectionManager, Schemifier, DefaultConnectionIdentifier, ConnectionIdentifier}
-import _root_.java.sql.{Connection, DriverManager}
+import java.sql.{Connection, DriverManager}
+
+import net.liftweb.common._
+import net.liftweb.util._
+
+import net.liftweb.http._
+import net.liftweb.sitemap._
+import net.liftweb.sitemap.Loc._
+import net.liftweb.mapper._
 import net.liftweb.widgets.tablesorter.TableSorter
 
-import _root_.tibi.quiver.model._
-
+import tibi.quiver.model._
 import tibi.quiver.view.ImageServer
 
 /**

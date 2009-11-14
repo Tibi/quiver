@@ -3,16 +3,15 @@ package tibi.quiver.snippet
 import java.util.Date
 
 import scala.xml._
-import net.liftweb._
 
+import net.liftweb.common._
+import net.liftweb.util._
+import net.liftweb.util.Helpers._  
 import net.liftweb.mapper.By
-import http._
-import js._
-import util._
-import S._
-import SHtml._
-import scala.xml._
-import Helpers._  
+import net.liftweb.http._
+import net.liftweb.http.js._
+import net.liftweb.http.SHtml._
+import net.liftweb.http.S._
 
 import model._
 import MultiString._
@@ -150,7 +149,7 @@ class Models {
                   "name_and_link" -> SHtml.link("/model.html",
                                                 () => currentModel(Full(model)),
                                                 Text(model.name.is), ("class", "model")),
-                   "delete_link" -> link("brand_models", () => model.delete_!, Text("Delete"))))
+                  "delete_link" -> link("brand_models", () => model.delete_!, Icons.delete)))
   def new_one(xhtml: NodeSeq): NodeSeq = {
     var name = ""
     def processNew(): Any = Model.create.name(name).brand(forBrand).productType(forProductType).save

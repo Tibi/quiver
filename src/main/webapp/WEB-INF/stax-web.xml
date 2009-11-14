@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<stax-web-app xmlns="http://www.stax.net/xml/webapp/1">     
+    <appid>quiver</appid>
+    <context-param>
+        <param-name>application.environment</param-name>
+        <param-value>prod</param-value>
+    </context-param>
+    <resource name="jdbc/quiver" auth="Container" type="javax.sql.DataSource">
+     <param name="username" value="tibi" />
+     <param name="password" value="stax3tibi" />
+     <param name="url" value="jdbc:stax://quiver" />
+    </resource>
+</stax-web-app>
