@@ -1,14 +1,35 @@
 <lift:surround with="default" at="content">
 
-    <lift:Categories.list>  
-      <div class="prepend-2 span-22 last">
-        <category:name_and_link/>
-      </div>
-    </lift:Categories.list>
   
-  <lift:Categories.new_one form="POST">
+  <lift:Cat.name>
+    <h1>Categories for <category:name/></h1>
+  </lift:Cat.name>
+    
+  <lift:Cat.listSubCategories>  
+    <div class="prepend-2 span-22 last">
+      <category:name_and_link/>
+    </div>
+  </lift:Cat.listSubCategories>
+  
+  <lift:Cat.new_one form="POST">
     <category:name/><category:submit/>
-  </lift:Categories.new_one>
+  </lift:Cat.new_one>
 
+
+
+  <lift:Cat.name>
+    <h1>Product types for <category:name/></h1>
+  </lift:Cat.name>
+  
+  <lift:Cat.listPTs>
+    <div class="prepend-2 span-22 last">
+        <product_type:name_and_link/><br/>
+    </div>
+  </lift:Cat.listPTs>
+  
+  <lift:Cat.newPT form="POST">
+    <product_type:name/><product_type:submit/>
+  </lift:Cat.newPT>
+  
 </lift:surround>
 

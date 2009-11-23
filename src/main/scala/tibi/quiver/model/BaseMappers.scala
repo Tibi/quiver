@@ -1,5 +1,6 @@
 package tibi.quiver.model
 
+import net.liftweb.common._
 import net.liftweb.mapper._
 import MultiString._
 
@@ -25,7 +26,12 @@ trait MNamedMapper[T <: MNamedMapper[T]] extends MyMapper[T] {
 }
 trait MNamedMetaMapper[T <: MNamedMapper[T]] extends MyMetaMapper[T] {
   self: T with MyMetaMapper[T] =>
-  def findByName(nameIn: String, lang: Lang) = //findAll(name.criterion(nameIn, lang))
-    findAll.filter(_.name.is(lang) == nameIn)
+  
+  def findByName(nameIn: String, lang: Lang): Box[T] =
+    findAll.filter(_.name.is(lang) == nameIn) match {
+      case List(one) => Full(one)
+      case List(_, _) => Failure("found several named " + nameIn)
+      case _ => Empty
+    }
  // override def fieldOrder = List(name)
 }

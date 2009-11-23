@@ -52,9 +52,9 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
       case "Name" => hasName = true; (x: String) => sizeName = Full(x)
       case "Year" => hasYear = true; (x: String) => year = Full(x.toInt)
       case "" | null => doNothing _
-      case propName: String => findProperty(propName) match {
+      case propName: String => Property.findByName(propName, lang) match {
         case Full(prop) => propVals(prop) = _
-        case other => errors += ("Unknown property or column: " + other); doNothing _ 
+        case _ => errors += ("Unknown property or column: " + propName); doNothing _ 
       }
     }
     if (!hasName)  errors += "CSV file has no name column."
@@ -106,11 +106,5 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
         newModel
       }
     })
-  }
-  
-  def findProperty(propName: String): Box[Property] = Property.findByName(propName, lang) match {
-    case List(prop) => Full(prop)
-    case List(_, _) => errors += "Found several properties named " + propName; Empty
-    case _ => errors += "Property not found " + propName; Empty
   }
 }

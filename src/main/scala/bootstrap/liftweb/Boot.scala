@@ -42,7 +42,7 @@ class Boot {
     LiftRules.addToPackages("tibi.quiver")
     
     // Tells Mapper to log all queries
-   // DB.addLogFunc((query, time) => Log debug { query + ":" + time + "ms" })
+    /* not working on stax
     DB.addLogFunc {
       case (query, time) => {
         Log.info("All queries took " + time + "ms: ")
@@ -51,7 +51,8 @@ class Boot {
         Log.info("End queries")
       }
     }
-
+    */
+    
     // Model classes to map to the database
     Schemifier.schemify(true, Log.infoF _, User, Image, Category, ProductType, Brand, Model, Size,
                         Property, PropertyValue, ProductTypeProperty)
@@ -61,7 +62,7 @@ class Boot {
 
     // Builds the menu (SiteMap)
     val entries = Menu(Loc("Home", List("index"), "Home"))::
-    			  Menu(Loc("Category", List("category"), "Category"))::
+    			 // Menu(Loc("Category", List("category"), "Category"))::
                   Menu(Loc("Brand", List("brand_models"), "Brand"), Brand.menus:_*)::
                   Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
                   Menu(Loc("Product Type", List("product_type"), "Product Type"))::
@@ -72,6 +73,12 @@ class Boot {
                   User.sitemap:::
                   Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
+    
+    // Rewrite some URLs
+    LiftRules.rewrite.prepend(NamedPF("category rewrite") {
+      case RewriteRequest(ParsePath("cat" :: category :: Nil, _, _,_), _, _) => 
+        RewriteResponse("index" :: Nil, Map("catName" -> category))
+    })
     
     // Initializes the jquery lift widget
     TableSorter.init

@@ -18,8 +18,9 @@ object DbSetup {
   def create[What <: MNamedMapper[What]](meta: MNamedMetaMapper[What], name: MString): What = create(meta, name, true)
   def create[What <: MNamedMapper[What]](meta: MNamedMetaMapper[What], name: MString, save: Boolean): What = {
     val res = meta.findByName(name(DefaultLang), DefaultLang) match {
-      case Nil => meta.create
-      case one :: _ => one
+      case Empty => meta.create
+      case Full(one) => one
+      case Failure(msg, cause, _) => throw new RuntimeException("not found " + name, cause openOr null)
     }
     res.name(name)
     if (save) saveIt(res)

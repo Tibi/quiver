@@ -8,7 +8,7 @@ Done
 
 Tech
  * use util.BindPlus,
- * try to chain binds,
+ * try to chain binds, http://bit.ly/3tdEZY
  * try mapper.view (http://tinyurl.com/ykxpn2t)
 
 Before 1st release

@@ -19,62 +19,11 @@ import view.ImageServer
 
 
 object lang extends SessionVar[Lang](English)
-object implicits {
+object LangImplicits {
   implicit def MMString2String(mmstr: MappedMString[_]): String = mmstr.is(lang.is)
   //implicit def String2MString(str: String): MString = MString(lang.is -> str)
 }
-import implicits._
-
-object currentCategory extends SessionVar[Box[Category]](Empty)
-
-class Categories {
-  def list(xhtml: NodeSeq): NodeSeq = Category.findAll(By(Category.parent, currentCategory.is)).flatMap(
-    category => bind("category", xhtml, "name" -> category.name,
-                  //TODO use sitemap to get links
-                  "name_and_link" -> SHtml.link("/category.html",
-                                                () => currentCategory(Full(category)),
-                                                Text(category.name),
-                                                ("class", "category"))
-    )
-  )
-  def new_one(xhtml: NodeSeq): NodeSeq = {
-    var name = ""
-    def processNew(): Any = Category.create.name(MString(lang.is -> name))
-      .parent(currentCategory.is).save
-    bind("category", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("New Category", processNew))
-  }
-}
-
-
-object currentProductType extends SessionVar[Box[ProductType]](Empty)
-
-class ProductTypes {
-  
-  val forCategory = currentCategory.is match {
-    case Full(category) => category
-    case _ => throw new RuntimeException("called without a category")
-  }
-
-  def header(xhtml: NodeSeq): NodeSeq = bind("category", xhtml,
-    "name" -> Text(forCategory.name))
-
-  def list(xhtml: NodeSeq): NodeSeq = forCategory.productTypes.flatMap(
-    productType => bind("product_type", xhtml, "name" -> productType.name,
-                  "name_and_link" -> SHtml.link("/product_type.html",
-                                                () => currentProductType(Full(productType)),
-                                                Text(productType.name),
-                  								("class", "product_type"))
-    )
-  )
-
-  def new_one(xhtml: NodeSeq): NodeSeq = {
-    var name = ""
-    def processNew(): Any = ProductType.create.name(MString(lang.is -> name)).category(currentCategory.is).save
-    bind("product_type", xhtml, "name" -> SHtml.text(name, name = _),
-      "submit" -> SHtml.submit("New Product Type", processNew))
-  }
-}
+import LangImplicits._
 
 
 object currentBrand extends SessionVar[Box[Brand]](Empty)

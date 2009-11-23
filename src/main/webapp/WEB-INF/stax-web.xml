@@ -5,9 +5,18 @@
         <param-name>application.environment</param-name>
         <param-value>prod</param-value>
     </context-param>
-    <resource name="jdbc/quiver" auth="Container" type="javax.sql.DataSource">
-     <param name="username" value="tibi" />
-     <param name="password" value="stax3tibi" />
-     <param name="url" value="jdbc:stax://quiver" />
+    
+    <resource name="jdbc/quiver_prod" auth="Container" type="javax.sql.DataSource">
+      <param name="username" value="tibi" />
+      <param name="password" value="stax3tibi" />
+      <param name="url" value="jdbc:stax://quiver" />
     </resource>
+    
+    <resource name="jdbc/quiver" auth="Container" type="javax.sql.DataSource">
+      <param name="username" value="quiver" />
+      <param name="password" value="quiver" />
+      <param name="url" value="jdbc:mysql://localhost:3306/quiver" />
+    </resource>
+    
+    
 </stax-web-app>
