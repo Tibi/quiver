@@ -61,8 +61,8 @@ class Boot {
     DbSetup.setup
 
     // Builds the menu (SiteMap)
-    val entries = Menu(Loc("Home", List("index"), "Home"))::
-    			 // Menu(Loc("Category", List("category"), "Category"))::
+    val entries = Menu(Loc("Home", List("index"), "home"))::
+                  Menu(Loc("Search", List("search"), "search"))::
                   Menu(Loc("Brand", List("brand_models"), "Brand"), Brand.menus:_*)::
                   Menu(Loc("Edit Brand", List("brand_edit"), "edit brand"))::
                   Menu(Loc("Product Type", List("product_type"), "Product Type"))::

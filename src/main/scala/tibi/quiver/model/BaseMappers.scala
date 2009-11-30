@@ -17,7 +17,9 @@ trait NamedMapper[T <: NamedMapper[T]] extends MyMapper[T] {
   override def toString: String = name
 }
 trait NamedMetaMapper[T <: NamedMapper[T]] extends MyMetaMapper[T] {
-	self: T with MyMetaMapper[T] =>  
+  self: T with MyMetaMapper[T] =>
+  def findByName(namePart: String): List[T] = findAll.filter(_.name.contains(namePart))
+  //TODO make a real db query to search
 }
 
 trait MNamedMapper[T <: MNamedMapper[T]] extends MyMapper[T] {

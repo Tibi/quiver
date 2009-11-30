@@ -7,9 +7,6 @@ import net.liftweb.util._
 import net.liftweb.util.Helpers._  
 import net.liftweb.mapper.By
 import net.liftweb.http._
-import net.liftweb.http.js._
-import net.liftweb.http.SHtml._
-import net.liftweb.http.S._
 
 import model._
 import MultiString._
@@ -64,13 +61,13 @@ class Cat {
   
 
   def listPTs(xhtml: NodeSeq): NodeSeq = cat match {
-    case Empty => Nil
     case Full(category) => category.productTypes.flatMap(
 	    productType => bind("product_type", xhtml, "name" -> productType.name,
 	                  "name_and_link" -> SHtml.link("/product_type.html",
 	                                                () => currentProductType(Full(productType)),
 	                                                Text(productType.name),
 	                  								("class", "product_type"))))
+    case _ => Nil
   }
 
   def newPT(xhtml: NodeSeq): NodeSeq = {

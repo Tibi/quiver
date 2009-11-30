@@ -1,0 +1,22 @@
+<div id="search">
+    
+  <h1>Search</h1>
+  
+  <lift:SimpleSearch.form  form="POST">
+    Model: <form:field/>
+  </lift:SimpleSearch.form>
+  
+  <lift:SimpleSearch.results/>
+  
+  <h2>Properties</h2>
+  <div id="advanced">
+    <lift:AdvancedSearch.form>
+      <div>
+        <span class="column span-2"><prop:name/></span>
+        <span class="column span-1"><prop:operator/></span>
+        <span class="column span-4"><prop:field/></span>
+       <hr/>
+      </div>
+    </lift:AdvancedSearch.form>
+  </div>
+</div>
