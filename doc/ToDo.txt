@@ -20,7 +20,7 @@ Before 1st release
    - stax db config & drivers
    - sbt stax deploy task: remove unused libs: h2, mysql driver, lift-textile      
  * Year: only year or first and last or all 3?
- * better look
+ * better look, use sexy buttons http://code.google.com/p/sexybuttons/
  * edit only for logged in users (except in test mode)
  * google doc sheets to enter data            
  * add rewrite rules to have nice urls http://quiver/brand/NP/model/V8  doc http://bit.ly/423KQp

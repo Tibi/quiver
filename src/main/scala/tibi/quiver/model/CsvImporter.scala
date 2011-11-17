@@ -3,13 +3,14 @@ package tibi.quiver.model
 import java.io.Reader
 import scala.collection.mutable.{Map => MutMap}
 import scala.collection.mutable.ListBuffer
-import collection.jcl.Conversions.convertList
+import collection.JavaConversions._
 
 import au.com.bytecode.opencsv.CSVReader
 
 import net.liftweb.common._
 import net.liftweb.mapper.By
 import net.liftweb.util._
+import net.liftweb.util.Helpers.tryo
 
 import MultiString._
 
@@ -49,11 +50,11 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
     // Reads the header into a list of functions to handle each cell
     val funcs: Seq[(String) => Unit] = for (head <- csv.readNext) yield head match {
       case "Model" => hasModel = true; handleModel _
-      case "Name" => hasName = true; (x: String) => sizeName = Full(x)
-      case "Year" => hasYear = true; (x: String) => year = Full(x.toInt)
+      case "Name" => hasName = true; (x: String) => sizeName = if (x.isEmpty) Empty else Full(x)
+      case "Year" => hasYear = true; (x: String) => year = tryo(x.toInt)
       case "" | null => doNothing _
       case propName: String => Property.findByName(propName, lang) match {
-        case Full(prop) => propVals(prop) = _
+        case Full(prop) => (x: String) => propVals(prop) = x
         case _ => errors += ("Unknown property or column: " + propName); doNothing _ 
       }
     }
@@ -63,9 +64,9 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
     if (!hasName || !hasModel || !hasYear) return
     
     // Read the other lines and apply the functions for each.
-    for (line <- convertList(csv.readAll)) {  // have to convert from java list
+    for (line <- csv.readAll) {  // have to convert from java list
       resetSizeInfos()
-      zipApply(funcs.toList, line.toList)
+      zipApply(funcs.toList, line.toList.map(_.trim))
       // Edit the size only if a size name, a model and a year are defined.
       for (sizeNam <- sizeName; modl <- model; yer <- year) {
         val size = Size.findAll(By(Size.model, modl), By(Size.name, sizeNam)) match {
@@ -94,7 +95,7 @@ class CsvImporter(val reader: Reader, val lang: Lang, val pt: ProductType, val b
 
   // When the model column is encountered.
   def handleModel(modelName: String): Unit = {
-    model = Full(models.get(modelName) match {
+    model = if (modelName.isEmpty) Empty else Full(models.get(modelName) match {
       case Some(mod) => mod
       case None => {
         // Model is not in the cache, load it. We suppose a model name is unique in a brand…

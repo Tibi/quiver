@@ -1,10 +1,11 @@
 syntax: glob
 
+project/
 target
-lib_managed
-project/boot
+.target
 **.log
 .manager
+.cache
 db
 stax
 **.lnk

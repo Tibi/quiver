@@ -3,7 +3,7 @@ package tibi.quiver.model
 
 import java.lang.reflect.Method
 import java.util.Date
-import scala.collection.immutable.EmptyMap
+import scala.collection.immutable.Map.EmptyMap
 import scala.xml._
 
 import net.liftweb.common._
@@ -132,7 +132,9 @@ object MultiString {
     def fieldCreatorString(dbType: DriverType, colName: String): String = colName+" VARCHAR("+maxLen*4+")"
      
     def asJsExp: JsExp = JE.Str(is.toString) //TODO also convert to string?
-      
+    
+    def asJsonValue = null
+    
     override def _toForm: Box[NodeSeq] = Full(SHtml.text(data(DefaultLang), this.setFromAny(_)))
 //      S.fmapFunc({s: List[String] => this.setFromAny(s)}) {
 //      funcName => Full(<input type='text' id={fieldId} name={funcName} value={}/>)

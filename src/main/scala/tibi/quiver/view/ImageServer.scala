@@ -6,10 +6,9 @@ import net.liftweb.common._
 import net.liftweb.mapper._ 
 import net.liftweb.http._ 
 import net.liftweb.util._
-import net.liftweb.util.ControlHelpers.tryo
 import net.liftweb.util.TimeHelpers.{toInternetDate, parseInternetDate, now}
 
-import model.Image
+import tibi.quiver.model.Image
 
 // Taken from http://www.mail-archive.com/liftweb@googlegroups.com/msg08344.html
 object ImageServer {

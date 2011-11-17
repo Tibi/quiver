@@ -8,9 +8,9 @@ import net.liftweb.util.Helpers._
 import net.liftweb.mapper.By
 import net.liftweb.http._
 
-import model._
+import tibi.quiver.model._
 import MultiString._
-import view.ImageServer
+import tibi.quiver.view.ImageServer
 
 import LangImplicits._
 
@@ -47,8 +47,7 @@ class Cat {
                   //TODO use sitemap to get links
                   "name_and_link" -> SHtml.link("/cat/" + category.name.is(lang),
                                                 () => null,  //() => currentCategory(Full(category)),
-                                                Text(category.name),
-                                                ("class", "category"))
+                                                Text(category.name))
     )
   )}
   

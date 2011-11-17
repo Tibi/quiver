@@ -3,7 +3,7 @@ package bootstrap.liftweb
 import java.sql.{Connection, DriverManager}
 
 import net.liftweb.common._
-import net.liftweb.util._
+import net.liftweb.util.NamedPF
 
 import net.liftweb.http._
 import net.liftweb.sitemap._
@@ -18,21 +18,14 @@ import tibi.quiver.view.ImageServer
   * A class that's instantiated early and run.  It allows the application
   * to modify lift's environment
   */
-class Boot {
+class Boot extends Logger {
   def boot {
     
     // Defines the database to use.
-    Log.debug("this is a debug message")
-    
+    debug("this is a debug message")    
     DefaultConnectionIdentifier.jndiName = "jdbc/quiver"
-    /*
-    import _root_.javax.naming.{Context, InitialContext}
-    import _root_.javax.sql.{DataSource}
-    val envContext = (new InitialContext).lookup("java:/comp/env").asInstanceOf[Context]
-    envContext.lookup(DefaultConnectionIdentifier.jndiName).asInstanceOf[DataSource].getConnection
-    */
     if (!DB.jndiJdbcConnAvailable_?) {
-      Log.warn("No JNDI, using h2")
+      warn("No JNDI, using h2")
       //DefaultConnectionIdentifier.jndiName = null
       //exit
       DB.defineConnectionManager(DefaultConnectionIdentifier, DbVendor)
@@ -54,8 +47,9 @@ class Boot {
     */
     
     // Model classes to map to the database
-    Schemifier.schemify(true, Log.infoF _, User, Image, Category, ProductType, Brand, Model, Size,
-                        Property, PropertyValue, ProductTypeProperty)
+    Schemifier.schemify(true, Schemifier.infoF _, User, Image,
+        Category, ProductType, Brand, Model, Size,
+        Property, PropertyValue, ProductTypeProperty)
 
     // Adds some basic data to our database: product types and properties
     DbSetup.setup
@@ -94,17 +88,11 @@ class Boot {
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
-    LiftRules.early.append(makeUtf8)
-
+    // Force the request to be UTF-8
+    LiftRules.early.append(_.setCharacterEncoding("UTF-8")) 
+    
     // We want all DB calls fired during an http request in a single transaction.
     S.addAround(DB.buildLoanWrapper)
-  }
-
-  /**
-   * Force the request to be UTF-8
-   */
-  private def makeUtf8(req: provider.HTTPRequest) {
-    req.setCharacterEncoding("UTF-8")
   }
 
 }

@@ -1,2 +1,2 @@
-rem set SBT_OPTS=-Dhttp.proxyHost=www-proxy.admin.ch -Dhttp.proxyPort=8080
-java %SBT_OPTS% -Xmx256M -jar sbt-launcher-0.5.5.jar %*
+set SCRIPT_DIR=%~dp0
+java -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -Xmx712M -Xss2M -jar "%SCRIPT_DIR%\sbt-launch.jar" %*

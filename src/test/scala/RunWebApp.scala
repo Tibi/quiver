@@ -1,3 +1,4 @@
+/*
 import _root_.org.mortbay.jetty.Connector
 import _root_.org.mortbay.jetty.Server
 import _root_.org.mortbay.jetty.webapp.WebAppContext
@@ -28,3 +29,4 @@ object RunWebApp {
 	  }
    }
 }
+*/

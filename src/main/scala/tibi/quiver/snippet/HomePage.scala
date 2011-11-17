@@ -13,9 +13,9 @@ import net.liftweb.http.js._
 import net.liftweb.http.SHtml._
 import net.liftweb.http.S._
 
-import model._
+import tibi.quiver.model._
 import MultiString._
-import view.ImageServer
+import tibi.quiver.view.ImageServer
 
 
 object lang extends SessionVar[Lang](English)
@@ -80,7 +80,8 @@ object currentModel extends SessionVar[Box[Model]](Empty)
 class Models {
   def header(xhtml: NodeSeq): NodeSeq = bind("head", xhtml,
     "brand" -> Text(forBrand.name),
-    "prod_type" -> Text(forProductType.name))
+    "prod_type" -> Text(forProductType.name)
+  )
   
    val forBrand = currentBrand.is match {
     case Full(brand) => brand
@@ -95,7 +96,7 @@ class Models {
   def list(xhtml: NodeSeq): NodeSeq = Model.findAll(By(Model.brand, forBrand),
                                                     By(Model.productType, forProductType)).flatMap(
     model => bind("model", xhtml, "name" -> model.name.is,
-                  "name_and_link" -> SHtml.link("/model.html",
+                  "name_and_link" -> SHtml.link("/model",
                                                 () => currentModel(Full(model)),
                                                 Text(model.name.is), ("class", "model")),
                   "delete_link" -> link("brand_models", () => model.delete_!, Icons.delete)))
